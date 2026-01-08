@@ -128,6 +128,15 @@
             background-color: #3d8b40;
         }
         
+        .btn-warning {
+            background-color: #ff9800;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e68900;
+        }
+        
         .password-input {
             background-color: #2a2a3e;
             border: 2px solid #4a4a7a;
@@ -330,6 +339,14 @@
         
         .mark-viewed-btn:hover {
             background-color: #3d8b40 !important;
+        }
+        
+        .return-to-queue-btn {
+            background-color: #ff9800 !important;
+        }
+        
+        .return-to-queue-btn:hover {
+            background-color: #e68900 !important;
         }
         
         .delete-btn {
@@ -597,6 +614,16 @@
         
         .queue-option:hover:not(.active) {
             background-color: #5a5a8a;
+        }
+        
+        .history-note {
+            background-color: #3a3a5e;
+            border-left: 4px solid #ff9800;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #d0d0f0;
         }
     </style>
 </head>
@@ -1120,7 +1147,8 @@
                 author: author,
                 dateAdded: new Date().toLocaleString('ru-RU'),
                 viewed: false,
-                viewedDate: null
+                viewedDate: null,
+                history: [`Добавлен в очередь: ${new Date().toLocaleString('ru-RU')}`]
             };
             
             // Добавляем в очередь
@@ -1156,7 +1184,12 @@
             
             // Помечаем как просмотренный
             item.viewed = true;
-            item.viewedDate = new Date().toLocaleString('ru-RU');
+            const viewedDate = new Date().toLocaleString('ru-RU');
+            item.viewedDate = viewedDate;
+            
+            // Добавляем в историю
+            if (!item.history) item.history = [];
+            item.history.push(`Отмечен как просмотренный: ${viewedDate}`);
             
             // Перемещаем из pending в viewed
             queues[queueType].pending.splice(itemIndex, 1);
@@ -1170,6 +1203,43 @@
             
             // Показываем уведомление
             showNotification('Элемент отмечен как просмотренный');
+        }
+        
+        // Возврат элемента обратно в очередь
+        function returnToQueue(queueType, id) {
+            if (!isAdmin) {
+                showNotification('Только админы могут возвращать элементы в очередь!', 'error');
+                return;
+            }
+            
+            // Находим элемент в viewed
+            const itemIndex = queues[queueType].viewed.findIndex(item => item.id === id);
+            if (itemIndex === -1) return;
+            
+            // Извлекаем элемент
+            const item = queues[queueType].viewed[itemIndex];
+            
+            // Возвращаем в очередь
+            item.viewed = false;
+            const returnDate = new Date().toLocaleString('ru-RU');
+            item.viewedDate = null;
+            
+            // Добавляем в историю
+            if (!item.history) item.history = [];
+            item.history.push(`Возвращен в очередь: ${returnDate}`);
+            
+            // Перемещаем из viewed в pending
+            queues[queueType].viewed.splice(itemIndex, 1);
+            queues[queueType].pending.push(item);
+            
+            // Сохраняем в localStorage
+            saveToLocalStorage();
+            
+            // Обновляем интерфейс
+            updateUI();
+            
+            // Показываем уведомление
+            showNotification('Элемент возвращен в очередь');
         }
         
         // Удаление элемента из очереди
@@ -1202,7 +1272,7 @@
             return names[queueType] || queueType;
         }
         
-        // Обновление интерфейса
+        // Обновление интерфейс
         function updateUI() {
             // Обновляем отображение роли
             document.getElementById('user-role').textContent = isAdmin ? 'Админ' : 'Пользователь';
@@ -1307,6 +1377,7 @@
             let actionsHTML = '';
             if (isAdmin) {
                 if (!isViewed) {
+                    // Элемент в очереди (pending)
                     actionsHTML = `
                         <div class="queue-item-actions">
                             <button onclick="markAsViewed('${queueType}', ${item.id})" class="mark-viewed-btn" title="Отметить как просмотренное">
@@ -1318,8 +1389,12 @@
                         </div>
                     `;
                 } else {
+                    // Элемент просмотренный (viewed)
                     actionsHTML = `
                         <div class="queue-item-actions">
+                            <button onclick="returnToQueue('${queueType}', ${item.id})" class="return-to-queue-btn" title="Вернуть в очередь">
+                                <i class="fas fa-undo"></i> Вернуть в очередь
+                            </button>
                             <button onclick="removeItem('${queueType}', ${item.id}, true)" class="delete-btn" title="Удалить">
                                 <i class="fas fa-trash"></i> Удалить
                             </button>
@@ -1346,11 +1421,25 @@
                 `;
             }
             
+            // Добавляем историю, если она есть
+            let historyHTML = '';
+            if (item.history && item.history.length > 0) {
+                historyHTML = `
+                    <div class="history-note">
+                        <strong><i class="fas fa-history"></i> История:</strong>
+                        <ul style="margin-top: 5px; padding-left: 20px;">
+                            ${item.history.map(entry => `<li style="margin-bottom: 3px;">${entry}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
             itemElement.innerHTML = `
                 <a href="${item.url}" target="_blank" class="queue-item-link">
                     <i class="fas fa-link"></i> ${domain}
                 </a>
                 ${detailsHTML}
+                ${historyHTML}
                 ${actionsHTML}
             `;
             
@@ -1540,7 +1629,8 @@
                     author: author,
                     dateAdded: dateAdded,
                     viewed: status === 'Просмотрено',
-                    viewedDate: viewedDate
+                    viewedDate: viewedDate,
+                    history: [`Импортирован из резервной копии: ${new Date().toLocaleString('ru-RU')}`]
                 };
                 
                 // Добавляем в соответствующую очередь
@@ -1654,7 +1744,8 @@
                                 author: 'Иван Иванов',
                                 dateAdded: '01.11.2023, 10:30:15',
                                 viewed: false,
-                                viewedDate: null
+                                viewedDate: null,
+                                history: ['Добавлен в очередь: 01.11.2023, 10:30:15']
                             },
                             {
                                 id: 2,
@@ -1662,7 +1753,8 @@
                                 author: 'Петр Петров',
                                 dateAdded: '02.11.2023, 14:22:45',
                                 viewed: false,
-                                viewedDate: null
+                                viewedDate: null,
+                                history: ['Добавлен в очередь: 02.11.2023, 14:22:45']
                             }
                         ],
                         viewed: [
@@ -1672,7 +1764,11 @@
                                 author: 'Сергей Сергеев',
                                 dateAdded: '30.10.2023, 09:15:22',
                                 viewed: true,
-                                viewedDate: '01.11.2023, 11:45:30'
+                                viewedDate: '01.11.2023, 11:45:30',
+                                history: [
+                                    'Добавлен в очередь: 30.10.2023, 09:15:22',
+                                    'Отмечен как просмотренный: 01.11.2023, 11:45:30'
+                                ]
                             }
                         ]
                     },
@@ -1684,7 +1780,8 @@
                                 author: 'Анна Аннова',
                                 dateAdded: '30.10.2023, 09:15:22',
                                 viewed: false,
-                                viewedDate: null
+                                viewedDate: null,
+                                history: ['Добавлен в очередь: 30.10.2023, 09:15:22']
                             }
                         ],
                         viewed: []
@@ -1697,7 +1794,8 @@
                                 author: 'Максим Максимов',
                                 dateAdded: '29.10.2023, 18:45:10',
                                 viewed: false,
-                                viewedDate: null
+                                viewedDate: null,
+                                history: ['Добавлен в очередь: 29.10.2023, 18:45:10']
                             }
                         ],
                         viewed: [
@@ -1707,7 +1805,13 @@
                                 author: 'Ольга Ольгова',
                                 dateAdded: '31.10.2023, 12:10:05',
                                 viewed: true,
-                                viewedDate: '02.11.2023, 15:30:45'
+                                viewedDate: '02.11.2023, 15:30:45',
+                                history: [
+                                    'Добавлен в очередь: 31.10.2023, 12:10:05',
+                                    'Отмечен как просмотренный: 02.11.2023, 15:30:45',
+                                    'Возвращен в очередь: 03.11.2023, 10:20:15',
+                                    'Снова отмечен как просмотренный: 04.11.2023, 14:45:30'
+                                ]
                             }
                         ]
                     }
