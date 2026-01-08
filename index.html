@@ -6,6 +6,24 @@
     <title>Очередь</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --accent-color: #FF2400;
+            --accent-hover: #E02000;
+            --accent-light: #FF4D33;
+            --main-bg: #293133;
+            --container-bg: #1E2527;
+            --secondary-bg: #2C3538;
+            --card-bg: #344044;
+            --border-color: #3D4A4D;
+            --text-color: #F5F5F5;
+            --text-secondary: #CCCCCC;
+            --text-muted: #AAAAAA;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #f44336;
+            --info-color: #2196F3;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -14,8 +32,8 @@
         }
         
         body {
-            background-color: #1e1e2e;
-            color: #e2e2e2;
+            background-color: var(--main-bg);
+            color: var(--text-color);
             min-height: 100vh;
             padding: 20px;
             max-width: 1000px;
@@ -23,32 +41,34 @@
         }
         
         .container {
-            background-color: #2a2a3e;
+            background-color: var(--container-bg);
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
         }
         
         header {
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 1px solid #3a3a5e;
+            border-bottom: 1px solid var(--border-color);
         }
         
         h1 {
-            color: #6c8eff;
+            color: var(--accent-color);
             font-size: 32px;
             margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         .subtitle {
-            color: #a0a0c0;
+            color: var(--text-secondary);
             font-size: 16px;
         }
         
         .admin-panel {
-            background-color: #3a3a5e;
+            background-color: var(--secondary-bg);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 25px;
@@ -57,6 +77,7 @@
             gap: 15px;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid var(--border-color);
         }
         
         .admin-status {
@@ -66,7 +87,7 @@
         }
         
         .admin-badge {
-            background-color: #ff6b6b;
+            background-color: var(--accent-color);
             color: white;
             padding: 8px 16px;
             border-radius: 20px;
@@ -75,6 +96,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 2px 5px rgba(255, 36, 0, 0.3);
         }
         
         .admin-controls {
@@ -84,8 +106,8 @@
         }
         
         .btn {
-            background-color: #4a4a7a;
-            color: #d0d0f0;
+            background-color: var(--card-bg);
+            color: var(--text-color);
             border: none;
             padding: 10px 18px;
             border-radius: 8px;
@@ -95,52 +117,55 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            border: 1px solid var(--border-color);
         }
         
         .btn:hover {
-            background-color: #5a5a8a;
+            background-color: var(--secondary-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
         .btn-primary {
-            background-color: #6c8eff;
+            background-color: var(--accent-color);
             color: white;
         }
         
         .btn-primary:hover {
-            background-color: #5a7eff;
+            background-color: var(--accent-hover);
         }
         
         .btn-danger {
-            background-color: #ff6b6b;
+            background-color: var(--danger-color);
             color: white;
         }
         
         .btn-danger:hover {
-            background-color: #ff5252;
+            background-color: #d32f2f;
         }
         
         .btn-success {
-            background-color: #4CAF50;
+            background-color: var(--success-color);
             color: white;
         }
         
         .btn-success:hover {
-            background-color: #3d8b40;
+            background-color: #388E3C;
         }
         
         .btn-warning {
-            background-color: #ff9800;
+            background-color: var(--warning-color);
             color: white;
         }
         
         .btn-warning:hover {
-            background-color: #e68900;
+            background-color: #F57C00;
         }
         
         .password-input {
-            background-color: #2a2a3e;
-            border: 2px solid #4a4a7a;
-            color: white;
+            background-color: var(--container-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
             padding: 10px 15px;
             border-radius: 8px;
             font-size: 16px;
@@ -149,16 +174,18 @@
         
         .password-input:focus {
             outline: none;
-            border-color: #6c8eff;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(255, 36, 0, 0.2);
         }
         
         .tabs {
             display: flex;
-            background-color: #3a3a5e;
+            background-color: var(--secondary-bg);
             border-radius: 12px;
             margin-bottom: 25px;
             overflow: hidden;
             flex-wrap: wrap;
+            border: 1px solid var(--border-color);
         }
         
         .tab {
@@ -168,17 +195,24 @@
             cursor: pointer;
             transition: all 0.3s;
             font-weight: bold;
-            color: #a0a0c0;
+            color: var(--text-secondary);
             min-width: 120px;
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .tab:last-child {
+            border-right: none;
         }
         
         .tab.active {
-            background-color: #6c8eff;
+            background-color: var(--accent-color);
             color: white;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
         }
         
         .tab:hover:not(.active) {
-            background-color: #4a4a7a;
+            background-color: var(--card-bg);
+            color: var(--text-color);
         }
         
         .queue-container {
@@ -211,7 +245,7 @@
         }
         
         .queue-title h2 {
-            color: #6c8eff;
+            color: var(--accent-color);
             font-size: 24px;
         }
         
@@ -221,14 +255,15 @@
         }
         
         .stat {
-            background-color: #3a3a5e;
-            color: #d0d0f0;
+            background-color: var(--secondary-bg);
+            color: var(--text-secondary);
             padding: 8px 15px;
             border-radius: 20px;
             font-weight: bold;
             display: flex;
             align-items: center;
             gap: 8px;
+            border: 1px solid var(--border-color);
         }
         
         .queue-content {
@@ -244,48 +279,72 @@
         }
         
         .queue-section {
-            background-color: #3a3a5e;
+            background-color: var(--secondary-bg);
             border-radius: 12px;
             padding: 20px;
+            border: 1px solid var(--border-color);
         }
         
         .queue-section h3 {
-            color: #6c8eff;
+            color: var(--accent-color);
             margin-bottom: 15px;
             font-size: 18px;
             display: flex;
             align-items: center;
             gap: 8px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #4a4a7a;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .queue-list {
             min-height: 200px;
             max-height: 400px;
             overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        /* Стилизация скроллбара */
+        .queue-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .queue-list::-webkit-scrollbar-track {
+            background: var(--container-bg);
+            border-radius: 4px;
+        }
+        
+        .queue-list::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+        
+        .queue-list::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-hover);
         }
         
         .queue-item {
-            background-color: #2a2a3e;
+            background-color: var(--card-bg);
             border-radius: 10px;
             padding: 16px;
             margin-bottom: 12px;
             transition: all 0.3s;
-            border-left: 4px solid #6c8eff;
+            border-left: 4px solid var(--accent-color);
+            border: 1px solid var(--border-color);
         }
         
         .queue-item.viewed {
-            border-left-color: #4CAF50;
-            opacity: 0.8;
+            border-left-color: var(--success-color);
+            opacity: 0.9;
         }
         
         .queue-item:hover {
-            background-color: #323248;
+            background-color: var(--secondary-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
         .queue-item-link {
-            color: #6c8eff;
+            color: var(--accent-color);
             text-decoration: none;
             font-weight: bold;
             font-size: 16px;
@@ -296,12 +355,13 @@
         
         .queue-item-link:hover {
             text-decoration: underline;
+            color: var(--accent-light);
         }
         
         .queue-item-details {
             display: flex;
             justify-content: space-between;
-            color: #a0a0c0;
+            color: var(--text-secondary);
             font-size: 14px;
             margin-top: 8px;
             flex-wrap: wrap;
@@ -316,8 +376,8 @@
         }
         
         .queue-item-actions button {
-            background-color: #4a4a7a;
-            color: white;
+            background-color: var(--container-bg);
+            color: var(--text-color);
             border: none;
             padding: 6px 12px;
             border-radius: 6px;
@@ -327,52 +387,58 @@
             gap: 6px;
             font-size: 14px;
             transition: all 0.3s;
+            border: 1px solid var(--border-color);
         }
         
         .queue-item-actions button:hover {
-            background-color: #5a5a8a;
+            background-color: var(--secondary-bg);
+            transform: translateY(-1px);
         }
         
         .mark-viewed-btn {
-            background-color: #4CAF50 !important;
+            background-color: var(--success-color) !important;
+            color: white !important;
         }
         
         .mark-viewed-btn:hover {
-            background-color: #3d8b40 !important;
+            background-color: #388E3C !important;
         }
         
         .return-to-queue-btn {
-            background-color: #ff9800 !important;
+            background-color: var(--warning-color) !important;
+            color: white !important;
         }
         
         .return-to-queue-btn:hover {
-            background-color: #e68900 !important;
+            background-color: #F57C00 !important;
         }
         
         .delete-btn {
-            background-color: #ff6b6b !important;
+            background-color: var(--danger-color) !important;
+            color: white !important;
         }
         
         .delete-btn:hover {
-            background-color: #ff5252 !important;
+            background-color: #d32f2f !important;
         }
         
         .empty-queue {
             text-align: center;
-            color: #a0a0c0;
+            color: var(--text-muted);
             padding: 60px 20px;
             font-style: italic;
         }
         
         .add-form {
-            background-color: #3a3a5e;
+            background-color: var(--secondary-bg);
             border-radius: 12px;
             padding: 20px;
             margin-top: 25px;
+            border: 1px solid var(--border-color);
         }
         
         .add-form h3 {
-            color: #6c8eff;
+            color: var(--accent-color);
             margin-bottom: 15px;
             font-size: 18px;
             display: flex;
@@ -400,7 +466,7 @@
         
         .form-group label {
             margin-bottom: 8px;
-            color: #d0d0f0;
+            color: var(--text-secondary);
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -410,19 +476,21 @@
         .form-group input {
             padding: 12px 16px;
             border-radius: 8px;
-            border: 2px solid #4a4a7a;
-            background-color: #2a2a3e;
-            color: white;
+            border: 2px solid var(--border-color);
+            background-color: var(--container-bg);
+            color: var(--text-color);
             font-size: 16px;
+            transition: all 0.3s;
         }
         
         .form-group input:focus {
             outline: none;
-            border-color: #6c8eff;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(255, 36, 0, 0.2);
         }
         
         .add-btn {
-            background-color: #6c8eff;
+            background-color: var(--accent-color);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -439,12 +507,16 @@
         }
         
         .add-btn:hover {
-            background-color: #5a7eff;
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 36, 0, 0.3);
         }
         
         .add-btn:disabled {
-            background-color: #4a4a7a;
+            background-color: var(--border-color);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .modal {
@@ -454,19 +526,20 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.8);
             z-index: 1000;
             justify-content: center;
             align-items: center;
         }
         
         .modal-content {
-            background-color: #2a2a3e;
+            background-color: var(--container-bg);
             border-radius: 12px;
             padding: 30px;
             max-width: 500px;
             width: 90%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-color);
         }
         
         .modal-header {
@@ -474,23 +547,29 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .modal-header h3 {
-            color: #6c8eff;
+            color: var(--accent-color);
             font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .close-modal {
             background: none;
             border: none;
-            color: #a0a0c0;
+            color: var(--text-secondary);
             font-size: 24px;
             cursor: pointer;
+            transition: color 0.3s;
         }
         
         .close-modal:hover {
-            color: white;
+            color: var(--accent-color);
         }
         
         .modal-body {
@@ -501,19 +580,21 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
         }
         
         footer {
             text-align: center;
             margin-top: 30px;
-            color: #a0a0c0;
+            color: var(--text-secondary);
             font-size: 14px;
             padding-top: 20px;
-            border-top: 1px solid #3a3a5e;
+            border-top: 1px solid var(--border-color);
         }
         
         .telegram-button {
-            background-color: #3390ec;
+            background-color: var(--info-color);
             color: white;
             padding: 10px 20px;
             border-radius: 10px;
@@ -523,10 +604,14 @@
             gap: 8px;
             margin-top: 10px;
             font-weight: bold;
+            transition: all 0.3s;
+            border: none;
         }
         
         .telegram-button:hover {
-            background-color: #2a7cd6;
+            background-color: #0b7dda;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
         /* Мобильная адаптация */
@@ -549,6 +634,12 @@
             
             .tab {
                 min-width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .tab:last-child {
+                border-bottom: none;
             }
             
             .admin-panel {
@@ -569,19 +660,38 @@
                 width: 100%;
                 justify-content: space-between;
             }
+            
+            .password-input {
+                width: 100%;
+            }
         }
         
         .csv-data {
-            background-color: #2a2a3e;
-            border: 1px solid #4a4a7a;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 15px;
             margin: 15px 0;
             max-height: 200px;
             overflow-y: auto;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             white-space: pre-wrap;
             word-break: break-all;
+            color: var(--text-color);
+        }
+        
+        .csv-data::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .csv-data::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+            border-radius: 4px;
+        }
+        
+        .csv-data::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
         }
         
         .backup-options {
@@ -599,31 +709,80 @@
         }
         
         .queue-option {
-            background-color: #4a4a7a;
-            color: #d0d0f0;
-            border: none;
+            background-color: var(--card-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
             padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
+            transition: all 0.3s;
         }
         
         .queue-option.active {
-            background-color: #6c8eff;
+            background-color: var(--accent-color);
             color: white;
+            border-color: var(--accent-color);
         }
         
         .queue-option:hover:not(.active) {
-            background-color: #5a5a8a;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
         }
         
         .history-note {
-            background-color: #3a3a5e;
-            border-left: 4px solid #ff9800;
+            background-color: var(--secondary-bg);
+            border-left: 4px solid var(--warning-color);
             padding: 12px;
             border-radius: 8px;
             margin-top: 10px;
             font-size: 14px;
-            color: #d0d0f0;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .history-note strong {
+            color: var(--text-color);
+        }
+        
+        .history-note ul {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+        
+        .history-note li {
+            margin-bottom: 3px;
+            color: var(--text-muted);
+        }
+        
+        /* Анимации и эффекты */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 36, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 36, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 36, 0, 0); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+            20%, 40%, 60%, 80% { transform: translateX(2px); }
+        }
+        
+        /* Эффект для новых элементов */
+        .new-item {
+            animation: highlight 2s;
+        }
+        
+        @keyframes highlight {
+            0% { background-color: rgba(255, 36, 0, 0.3); }
+            100% { background-color: var(--card-bg); }
         }
     </style>
 </head>
@@ -638,7 +797,7 @@
             <div class="admin-status">
                 <div>
                     <p>Статус: <span id="user-role">Пользователь</span></p>
-                    <p id="admin-note" style="display: none; color: #ff6b6b; font-size: 14px; margin-top: 4px;">
+                    <p id="admin-note" style="display: none; color: var(--accent-color); font-size: 14px; margin-top: 4px;">
                         <i class="fas fa-shield-alt"></i> У вас есть права на управление очередями
                     </p>
                 </div>
@@ -1021,9 +1180,13 @@
                 if (password === ADMIN_PASSWORD) {
                     isAdmin = true;
                     document.getElementById('admin-password').value = '';
-                    showNotification('Успешный вход как администратор');
+                    showNotification('Успешный вход как администратор', 'success');
                 } else {
                     showNotification('Неверный пароль', 'error');
+                    document.getElementById('admin-password').classList.add('shake');
+                    setTimeout(() => {
+                        document.getElementById('admin-password').classList.remove('shake');
+                    }, 500);
                     return;
                 }
                 updateUI();
@@ -1032,7 +1195,7 @@
             // Кнопка выхода
             document.getElementById('logout-btn').addEventListener('click', function() {
                 isAdmin = false;
-                showNotification('Вы вышли из режима админа');
+                showNotification('Вы вышли из режима админа', 'info');
                 updateUI();
             });
             
@@ -1113,6 +1276,13 @@
                     updateCSVPreview();
                 });
             });
+            
+            // Закрытие модальных окон при клике вне их
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
         }
         
         // Добавление элемента в очередь
@@ -1129,6 +1299,8 @@
             
             if (!link || !author) {
                 showNotification('Заполните все поля!', 'error');
+                if (!link) linkInput.focus();
+                else authorInput.focus();
                 return;
             }
             
@@ -1137,6 +1309,7 @@
                 new URL(link);
             } catch {
                 showNotification('Введите корректную ссылку!', 'error');
+                linkInput.focus();
                 return;
             }
             
@@ -1164,8 +1337,24 @@
             // Обновляем интерфейс
             updateUI();
             
+            // Подсвечиваем новый элемент
+            highlightNewItem(queueType, newItem.id);
+            
             // Показываем уведомление
-            showNotification(`Элемент добавлен в очередь "${getQueueName(queueType)}"`);
+            showNotification(`Элемент добавлен в очередь "${getQueueName(queueType)}"`, 'success');
+        }
+        
+        // Подсветка нового элемента
+        function highlightNewItem(queueType, itemId) {
+            setTimeout(() => {
+                const itemElement = document.querySelector(`.queue-item[data-id="${itemId}"]`);
+                if (itemElement) {
+                    itemElement.classList.add('new-item');
+                    setTimeout(() => {
+                        itemElement.classList.remove('new-item');
+                    }, 2000);
+                }
+            }, 100);
         }
         
         // Отметка элемента как просмотренного
@@ -1202,7 +1391,7 @@
             updateUI();
             
             // Показываем уведомление
-            showNotification('Элемент отмечен как просмотренный');
+            showNotification('Элемент отмечен как просмотренный', 'success');
         }
         
         // Возврат элемента обратно в очередь
@@ -1239,7 +1428,7 @@
             updateUI();
             
             // Показываем уведомление
-            showNotification('Элемент возвращен в очередь');
+            showNotification('Элемент возвращен в очередь', 'success');
         }
         
         // Удаление элемента из очереди
@@ -1258,7 +1447,7 @@
                 
                 saveToLocalStorage();
                 updateUI();
-                showNotification('Элемент удален из очереди');
+                showNotification('Элемент удален из очереди', 'info');
             }
         }
         
@@ -1272,10 +1461,11 @@
             return names[queueType] || queueType;
         }
         
-        // Обновление интерфейс
+        // Обновление интерфейса
         function updateUI() {
             // Обновляем отображение роли
             document.getElementById('user-role').textContent = isAdmin ? 'Админ' : 'Пользователь';
+            document.getElementById('user-role').style.color = isAdmin ? 'var(--accent-color)' : 'var(--text-color)';
             document.getElementById('admin-note').style.display = isAdmin ? 'block' : 'none';
             document.getElementById('admin-controls').style.display = isAdmin ? 'flex' : 'none';
             document.getElementById('password-form').style.display = 'none';
@@ -1363,6 +1553,7 @@
         function createQueueItemElement(queueType, item, isViewed) {
             const itemElement = document.createElement('div');
             itemElement.className = `queue-item ${isViewed ? 'viewed' : ''}`;
+            itemElement.setAttribute('data-id', item.id);
             
             // Извлекаем домен для отображения
             let domain = '';
@@ -1428,7 +1619,8 @@
                     <div class="history-note">
                         <strong><i class="fas fa-history"></i> История:</strong>
                         <ul style="margin-top: 5px; padding-left: 20px;">
-                            ${item.history.map(entry => `<li style="margin-bottom: 3px;">${entry}</li>`).join('')}
+                            ${item.history.slice(-3).map(entry => `<li style="margin-bottom: 3px;">${entry}</li>`).join('')}
+                            ${item.history.length > 3 ? `<li style="color: var(--accent-color); font-style: italic;">... и еще ${item.history.length - 3} записей</li>` : ''}
                         </ul>
                     </div>
                 `;
@@ -1500,7 +1692,7 @@
         function copyCSVToClipboard() {
             const csvData = document.getElementById('csv-preview').textContent;
             navigator.clipboard.writeText(csvData).then(() => {
-                showNotification('CSV скопирован в буфер обмена');
+                showNotification('CSV скопирован в буфер обмена', 'success');
             }).catch(err => {
                 showNotification('Не удалось скопировать CSV', 'error');
                 console.error('Ошибка копирования:', err);
@@ -1526,7 +1718,7 @@
             link.click();
             document.body.removeChild(link);
             
-            showNotification(`Файл ${filename} скачан`);
+            showNotification(`Файл ${filename} скачан`, 'success');
         }
         
         // Восстановление из CSV
@@ -1553,7 +1745,7 @@
                     document.getElementById('restore-modal').style.display = 'none';
                     document.getElementById('restore-csv-data').value = '';
                     
-                    showNotification(`Восстановлено: ${result.added} элементов добавлено, ${result.skipped} пропущено`);
+                    showNotification(`Восстановлено: ${result.added} элементов добавлено, ${result.skipped} пропущено`, 'success');
                 } else {
                     showNotification(`Ошибка: ${result.error}`, 'error');
                 }
@@ -1686,7 +1878,27 @@
             const notification = document.createElement('div');
             notification.textContent = message;
             
-            const bgColor = type === 'error' ? '#ff6b6b' : '#6c8eff';
+            let bgColor, icon;
+            switch(type) {
+                case 'error':
+                    bgColor = 'var(--danger-color)';
+                    icon = 'fas fa-exclamation-circle';
+                    break;
+                case 'warning':
+                    bgColor = 'var(--warning-color)';
+                    icon = 'fas fa-exclamation-triangle';
+                    break;
+                case 'info':
+                    bgColor = 'var(--info-color)';
+                    icon = 'fas fa-info-circle';
+                    break;
+                case 'success':
+                default:
+                    bgColor = 'var(--accent-color)';
+                    icon = 'fas fa-check-circle';
+            }
+            
+            notification.innerHTML = `<i class="${icon}"></i> ${message}`;
             
             notification.style.cssText = `
                 position: fixed;
@@ -1701,6 +1913,9 @@
                 font-weight: bold;
                 animation: slideIn 0.3s ease-out;
                 max-width: 300px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
             `;
             
             document.body.appendChild(notification);
@@ -1818,6 +2033,7 @@
                 };
                 saveToLocalStorage();
                 updateUI();
+                showNotification('Загружены демо-данные', 'info');
             }
         }
         
@@ -1834,7 +2050,7 @@
                     boosti: { pending: [], viewed: [] }
                 };
                 updateUI();
-                showNotification('Все данные сброшены');
+                showNotification('Все данные сброшены', 'info');
             }
         };
         
@@ -1849,7 +2065,7 @@
             if (newPassword && newPassword.length >= 4) {
                 // В реальном приложении пароль должен храниться на сервере
                 // Здесь мы только покажем сообщение
-                showNotification('Пароль изменен. В реальном приложении пароль должен храниться на сервере.');
+                showNotification('Пароль изменен. В реальном приложении пароль должен храниться на сервере.', 'info');
             } else if (newPassword) {
                 showNotification('Пароль должен быть не менее 4 символов', 'error');
             }
