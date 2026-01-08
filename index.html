@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Очередь</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #1e1e2e;
+            color: #e2e2e2;
+            min-height: 100vh;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background-color: #2a2a3e;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #3a3a5e;
+        }
+        
+        h1 {
+            color: #6c8eff;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #a0a0c0;
+            font-size: 16px;
+        }
+        
+        .admin-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background-color: #3a3a5e;
+            padding: 12px 20px;
+            border-radius: 12px;
+        }
+        
+        .admin-badge {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .admin-badge i {
+            font-size: 12px;
+        }
+        
+        .toggle-admin-btn {
+            background-color: #4a4a7a;
+            color: #d0d0f0;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .toggle-admin-btn:hover {
+            background-color: #5a5a8a;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: #3a3a5e;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #a0a0c0;
+        }
+        
+        .tab.active {
+            background-color: #6c8eff;
+            color: white;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: #4a4a7a;
+        }
+        
+        .queue-container {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .queue-container.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .queue-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .queue-title h2 {
+            color: #6c8eff;
+            font-size: 24px;
+        }
+        
+        .queue-count {
+            background-color: #3a3a5e;
+            color: #d0d0f0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .queue-list {
+            background-color: #3a3a5e;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 300px;
+            margin-bottom: 25px;
+        }
+        
+        .queue-item {
+            background-color: #2a2a3e;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            border-left: 4px solid #6c8eff;
+        }
+        
+        .queue-item:hover {
+            background-color: #323248;
+            transform: translateX(5px);
+        }
+        
+        .queue-item-content {
+            flex: 1;
+        }
+        
+        .queue-item-link {
+            color: #6c8eff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            word-break: break-all;
+            display: block;
+            margin-bottom: 6px;
+        }
+        
+        .queue-item-link:hover {
+            text-decoration: underline;
+        }
+        
+        .queue-item-date {
+            color: #a0a0c0;
+            font-size: 14px;
+        }
+        
+        .queue-item-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 15px;
+        }
+        
+        .queue-item-actions button {
+            background-color: #4a4a7a;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .queue-item-actions button:hover {
+            background-color: #ff6b6b;
+        }
+        
+        .empty-queue {
+            text-align: center;
+            color: #a0a0c0;
+            padding: 60px 20px;
+            font-style: italic;
+        }
+        
+        .add-form {
+            background-color: #3a3a5e;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .add-form h3 {
+            color: #6c8eff;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #d0d0f0;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 2px solid #4a4a7a;
+            background-color: #2a2a3e;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #6c8eff;
+        }
+        
+        .add-btn {
+            background-color: #6c8eff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .add-btn:hover {
+            background-color: #5a7eff;
+        }
+        
+        .add-btn:disabled {
+            background-color: #4a4a7a;
+            cursor: not-allowed;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #a0a0c0;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid #3a3a5e;
+        }
+        
+        .telegram-button {
+            background-color: #3390ec;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .telegram-button:hover {
+            background-color: #2a7cd6;
+        }
+        
+        /* Мобильная адаптация */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 16px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .queue-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .queue-item-actions {
+                margin-left: 0;
+                margin-top: 12px;
+                align-self: flex-end;
+            }
+            
+            .admin-status {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-list-ol"></i> Очередь</h1>
+            <p class="subtitle">Управление очередями для роликов, музыки и бусти</p>
+        </header>
+        
+        <div class="admin-status">
+            <div>
+                <p>Статус: <span id="user-role">Пользователь</span></p>
+                <p id="admin-note" style="display: none; color: #ff6b6b; font-size: 14px; margin-top: 4px;">
+                    <i class="fas fa-shield-alt"></i> У вас есть права на добавление и удаление элементов
+                </p>
+            </div>
+            <button id="toggle-admin" class="toggle-admin-btn">
+                <i class="fas fa-user-shield"></i> Переключить роль
+            </button>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="roliki">Ролики</div>
+            <div class="tab" data-tab="music">Музыка</div>
+            <div class="tab" data-tab="boosti">Очередь на Бусти</div>
+        </div>
+        
+        <div id="roliki-queue" class="queue-container active">
+            <div class="queue-title">
+                <h2><i class="fas fa-film"></i> Очередь роликов</h2>
+                <div class="queue-count">Элементов: <span id="roliki-count">0</span></div>
+            </div>
+            
+            <div class="queue-list" id="roliki-list">
+                <!-- Здесь будут элементы очереди роликов -->
+            </div>
+            
+            <div class="add-form" id="roliki-form">
+                <h3><i class="fas fa-plus-circle"></i> Добавить ролик</h3>
+                <div class="form-group">
+                    <label for="roliki-link">Ссылка на ролик:</label>
+                    <input type="url" id="roliki-link" placeholder="https://youtube.com/watch?v=..." required>
+                </div>
+                <button class="add-btn" id="add-roliki">Добавить в очередь</button>
+            </div>
+        </div>
+        
+        <div id="music-queue" class="queue-container">
+            <div class="queue-title">
+                <h2><i class="fas fa-music"></i> Очередь музыки</h2>
+                <div class="queue-count">Элементов: <span id="music-count">0</span></div>
+            </div>
+            
+            <div class="queue-list" id="music-list">
+                <!-- Здесь будут элементы очереди музыки -->
+            </div>
+            
+            <div class="add-form" id="music-form">
+                <h3><i class="fas fa-plus-circle"></i> Добавить музыку</h3>
+                <div class="form-group">
+                    <label for="music-link">Ссылка на трек:</label>
+                    <input type="url" id="music-link" placeholder="https://spotify.com/track/..." required>
+                </div>
+                <button class="add-btn" id="add-music">Добавить в очередь</button>
+            </div>
+        </div>
+        
+        <div id="boosti-queue" class="queue-container">
+            <div class="queue-title">
+                <h2><i class="fas fa-star"></i> Очередь на Бусти</h2>
+                <div class="queue-count">Элементов: <span id="boosti-count">0</span></div>
+            </div>
+            
+            <div class="queue-list" id="boosti-list">
+                <!-- Здесь будут элементы очереди на бусти -->
+            </div>
+            
+            <div class="add-form" id="boosti-form">
+                <h3><i class="fas fa-plus-circle"></i> Добавить в очередь на Бусти</h3>
+                <div class="form-group">
+                    <label for="boosti-link">Ссылка на профиль/заказ:</label>
+                    <input type="url" id="boosti-link" placeholder="https://boosty.to/..." required>
+                </div>
+                <button class="add-btn" id="add-boosti">Добавить в очередь</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Приложение "Очередь" для Telegram © 2023</p>
+            <p>Админы могут добавлять и удалять элементы, остальные пользователи — только просматривать</p>
+            <a href="https://telegram.org" target="_blank" class="telegram-button">
+                <i class="fab fa-telegram"></i> Открыть в Telegram
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        // Состояние приложения
+        let isAdmin = false;
+        let queues = {
+            roliki: [],
+            music: [],
+            boosti: []
+        };
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Загружаем данные из localStorage
+            loadFromLocalStorage();
+            
+            // Настраиваем вкладки
+            setupTabs();
+            
+            // Настраиваем кнопку переключения роли
+            setupAdminToggle();
+            
+            // Настраиваем формы добавления
+            setupAddForms();
+            
+            // Обновляем интерфейс
+            updateUI();
+        });
+        
+        // Загрузка данных из localStorage
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('telegram-queue-app');
+            if (savedData) {
+                queues = JSON.parse(savedData);
+            }
+        }
+        
+        // Сохранение данных в localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('telegram-queue-app', JSON.stringify(queues));
+        }
+        
+        // Настройка вкладок
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Убираем активный класс у всех вкладок и контейнеров
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.queue-container').forEach(container => {
+                        container.classList.remove('active');
+                    });
+                    
+                    // Добавляем активный класс текущей вкладке и контейнеру
+                    this.classList.add('active');
+                    document.getElementById(`${tabId}-queue`).classList.add('active');
+                });
+            });
+        }
+        
+        // Настройка переключения роли
+        function setupAdminToggle() {
+            const toggleBtn = document.getElementById('toggle-admin');
+            toggleBtn.addEventListener('click', function() {
+                isAdmin = !isAdmin;
+                updateUI();
+            });
+        }
+        
+        // Настройка форм добавления
+        function setupAddForms() {
+            // Форма для роликов
+            document.getElementById('add-roliki').addEventListener('click', function() {
+                addItem('roliki');
+            });
+            
+            // Форма для музыки
+            document.getElementById('add-music').addEventListener('click', function() {
+                addItem('music');
+            });
+            
+            // Форма для бусти
+            document.getElementById('add-boosti').addEventListener('click', function() {
+                addItem('boosti');
+            });
+            
+            // Разрешаем добавлять по нажатию Enter
+            document.getElementById('roliki-link').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addItem('roliki');
+            });
+            
+            document.getElementById('music-link').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addItem('music');
+            });
+            
+            document.getElementById('boosti-link').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addItem('boosti');
+            });
+        }
+        
+        // Добавление элемента в очередь
+        function addItem(queueType) {
+            if (!isAdmin) {
+                alert('Только админы могут добавлять элементы!');
+                return;
+            }
+            
+            const inputId = `${queueType}-link`;
+            const linkInput = document.getElementById(inputId);
+            const link = linkInput.value.trim();
+            
+            if (!link) {
+                alert('Введите ссылку!');
+                return;
+            }
+            
+            // Проверяем, что это действительно ссылка
+            try {
+                new URL(link);
+            } catch {
+                alert('Введите корректную ссылку!');
+                return;
+            }
+            
+            // Создаем новый элемент
+            const newItem = {
+                id: Date.now(),
+                url: link,
+                date: new Date().toLocaleString('ru-RU'),
+                addedBy: isAdmin ? 'Админ' : 'Пользователь'
+            };
+            
+            // Добавляем в очередь
+            queues[queueType].push(newItem);
+            
+            // Сохраняем в localStorage
+            saveToLocalStorage();
+            
+            // Очищаем поле ввода
+            linkInput.value = '';
+            
+            // Обновляем интерфейс
+            updateUI();
+            
+            // Показываем уведомление
+            showNotification(`Элемент добавлен в очередь "${getQueueName(queueType)}"`);
+        }
+        
+        // Удаление элемента из очереди
+        function removeItem(queueType, id) {
+            if (!isAdmin) {
+                alert('Только админы могут удалять элементы!');
+                return;
+            }
+            
+            if (confirm('Вы уверены, что хотите удалить этот элемент?')) {
+                queues[queueType] = queues[queueType].filter(item => item.id !== id);
+                saveToLocalStorage();
+                updateUI();
+                showNotification('Элемент удален из очереди');
+            }
+        }
+        
+        // Получение отображаемого имени очереди
+        function getQueueName(queueType) {
+            const names = {
+                roliki: 'Ролики',
+                music: 'Музыка',
+                boosti: 'Очередь на Бусти'
+            };
+            return names[queueType] || queueType;
+        }
+        
+        // Обновление интерфейса
+        function updateUI() {
+            // Обновляем отображение роли
+            document.getElementById('user-role').textContent = isAdmin ? 'Админ' : 'Пользователь';
+            document.getElementById('admin-note').style.display = isAdmin ? 'block' : 'none';
+            
+            // Обновляем каждую очередь
+            updateQueueUI('roliki');
+            updateQueueUI('music');
+            updateQueueUI('boosti');
+            
+            // Показываем/скрываем формы добавления в зависимости от роли
+            document.querySelectorAll('.add-form').forEach(form => {
+                form.style.display = isAdmin ? 'block' : 'none';
+            });
+        }
+        
+        // Обновление отображения конкретной очереди
+        function updateQueueUI(queueType) {
+            const queueList = document.getElementById(`${queueType}-list`);
+            const queueCount = document.getElementById(`${queueType}-count`);
+            const queue = queues[queueType];
+            
+            // Обновляем счетчик
+            queueCount.textContent = queue.length;
+            
+            // Очищаем список
+            queueList.innerHTML = '';
+            
+            // Если очередь пуста
+            if (queue.length === 0) {
+                queueList.innerHTML = '<div class="empty-queue">Очередь пуста. Добавьте первый элемент!</div>';
+                return;
+            }
+            
+            // Добавляем элементы
+            queue.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'queue-item';
+                
+                // Извлекаем домен для отображения
+                let domain = '';
+                try {
+                    const url = new URL(item.url);
+                    domain = url.hostname.replace('www.', '');
+                } catch {
+                    domain = 'неизвестный источник';
+                }
+                
+                itemElement.innerHTML = `
+                    <div class="queue-item-content">
+                        <a href="${item.url}" target="_blank" class="queue-item-link">
+                            <i class="fas fa-link"></i> ${domain}
+                        </a>
+                        <div class="queue-item-date">
+                            Добавлено: ${item.date} | ${item.addedBy}
+                        </div>
+                    </div>
+                    ${isAdmin ? `
+                    <div class="queue-item-actions">
+                        <button onclick="removeItem('${queueType}', ${item.id})" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    ` : ''}
+                `;
+                
+                queueList.appendChild(itemElement);
+            });
+        }
+        
+        // Показать уведомление
+        function showNotification(message) {
+            // Создаем элемент уведомления
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: #6c8eff;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 1000;
+                font-weight: bold;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Удаляем уведомление через 3 секунды
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+            
+            // Добавляем стили для анимации, если их еще нет
+            if (!document.getElementById('notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        // Инициализация демо-данных (если localStorage пуст)
+        function initDemoData() {
+            const hasData = localStorage.getItem('telegram-queue-app');
+            if (!hasData) {
+                queues = {
+                    roliki: [
+                        {
+                            id: 1,
+                            url: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
+                            date: '01.11.2023, 10:30:15',
+                            addedBy: 'Админ'
+                        },
+                        {
+                            id: 2,
+                            url: 'https://vimeo.com/123456789',
+                            date: '02.11.2023, 14:22:45',
+                            addedBy: 'Админ'
+                        }
+                    ],
+                    music: [
+                        {
+                            id: 3,
+                            url: 'https://spotify.com/track/4cOdK2wGLETKBW3PvgPWqT',
+                            date: '30.10.2023, 09:15:22',
+                            addedBy: 'Админ'
+                        }
+                    ],
+                    boosti: [
+                        {
+                            id: 4,
+                            url: 'https://boosty.to/examplecreator',
+                            date: '29.10.2023, 18:45:10',
+                            addedBy: 'Админ'
+                        },
+                        {
+                            id: 5,
+                            url: 'https://boosty.to/anothercreator',
+                            date: '31.10.2023, 12:10:05',
+                            addedBy: 'Админ'
+                        }
+                    ]
+                };
+                saveToLocalStorage();
+                updateUI();
+            }
+        }
+        
+        // Инициализируем демо-данные при загрузке
+        window.initDemoData = initDemoData;
+        
+        // Функция для сброса данных (для тестирования)
+        window.resetData = function() {
+            if (confirm('Вы уверены, что хотите сбросить все данные?')) {
+                localStorage.removeItem('telegram-queue-app');
+                queues = { roliki: [], music: [], boosti: [] };
+                updateUI();
+                showNotification('Все данные сброшены');
+            }
+        };
+    </script>
+</body>
+</html>
