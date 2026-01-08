@@ -18,7 +18,7 @@
             color: #e2e2e2;
             min-height: 100vh;
             padding: 20px;
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         
@@ -47,45 +47,100 @@
             font-size: 16px;
         }
         
-        .admin-status {
+        .admin-panel {
+            background-color: #3a3a5e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
             display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            background-color: #3a3a5e;
-            padding: 12px 20px;
-            border-radius: 12px;
+        }
+        
+        .admin-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         
         .admin-badge {
             background-color: #ff6b6b;
             color: white;
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
         
-        .admin-badge i {
-            font-size: 12px;
+        .admin-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
         
-        .toggle-admin-btn {
+        .btn {
             background-color: #4a4a7a;
             color: #d0d0f0;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .toggle-admin-btn:hover {
+        .btn:hover {
             background-color: #5a5a8a;
+        }
+        
+        .btn-primary {
+            background-color: #6c8eff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5a7eff;
+        }
+        
+        .btn-danger {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #ff5252;
+        }
+        
+        .btn-success {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #3d8b40;
+        }
+        
+        .password-input {
+            background-color: #2a2a3e;
+            border: 2px solid #4a4a7a;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 200px;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: #6c8eff;
         }
         
         .tabs {
@@ -94,6 +149,7 @@
             border-radius: 12px;
             margin-bottom: 25px;
             overflow: hidden;
+            flex-wrap: wrap;
         }
         
         .tab {
@@ -104,6 +160,7 @@
             transition: all 0.3s;
             font-weight: bold;
             color: #a0a0c0;
+            min-width: 120px;
         }
         
         .tab.active {
@@ -129,11 +186,19 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .queue-title {
+        .queue-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .queue-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
         .queue-title h2 {
@@ -141,20 +206,55 @@
             font-size: 24px;
         }
         
-        .queue-count {
-            background-color: #3a3a5e;
-            color: #d0d0f0;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: bold;
+        .queue-stats {
+            display: flex;
+            gap: 15px;
         }
         
-        .queue-list {
+        .stat {
+            background-color: #3a3a5e;
+            color: #d0d0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .queue-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        
+        @media (min-width: 900px) {
+            .queue-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .queue-section {
             background-color: #3a3a5e;
             border-radius: 12px;
             padding: 20px;
-            min-height: 300px;
-            margin-bottom: 25px;
+        }
+        
+        .queue-section h3 {
+            color: #6c8eff;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #4a4a7a;
+        }
+        
+        .queue-list {
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
         }
         
         .queue-item {
@@ -162,20 +262,17 @@
             border-radius: 10px;
             padding: 16px;
             margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             transition: all 0.3s;
             border-left: 4px solid #6c8eff;
         }
         
-        .queue-item:hover {
-            background-color: #323248;
-            transform: translateX(5px);
+        .queue-item.viewed {
+            border-left-color: #4CAF50;
+            opacity: 0.8;
         }
         
-        .queue-item-content {
-            flex: 1;
+        .queue-item:hover {
+            background-color: #323248;
         }
         
         .queue-item-link {
@@ -192,33 +289,55 @@
             text-decoration: underline;
         }
         
-        .queue-item-date {
+        .queue-item-details {
+            display: flex;
+            justify-content: space-between;
             color: #a0a0c0;
             font-size: 14px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .queue-item-actions {
             display: flex;
             gap: 8px;
-            margin-left: 15px;
+            margin-top: 12px;
+            flex-wrap: wrap;
         }
         
         .queue-item-actions button {
             background-color: #4a4a7a;
             color: white;
             border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 6px;
+            font-size: 14px;
             transition: all 0.3s;
         }
         
         .queue-item-actions button:hover {
-            background-color: #ff6b6b;
+            background-color: #5a5a8a;
+        }
+        
+        .mark-viewed-btn {
+            background-color: #4CAF50 !important;
+        }
+        
+        .mark-viewed-btn:hover {
+            background-color: #3d8b40 !important;
+        }
+        
+        .delete-btn {
+            background-color: #ff6b6b !important;
+        }
+        
+        .delete-btn:hover {
+            background-color: #ff5252 !important;
         }
         
         .empty-queue {
@@ -232,27 +351,46 @@
             background-color: #3a3a5e;
             border-radius: 12px;
             padding: 20px;
+            margin-top: 25px;
         }
         
         .add-form h3 {
             color: #6c8eff;
             margin-bottom: 15px;
             font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .form-group {
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
             margin-bottom: 15px;
         }
         
+        @media (min-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
         .form-group label {
-            display: block;
             margin-bottom: 8px;
             color: #d0d0f0;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         
         .form-group input {
-            width: 100%;
             padding: 12px 16px;
             border-radius: 8px;
             border: 2px solid #4a4a7a;
@@ -277,6 +415,10 @@
             font-size: 16px;
             transition: all 0.3s;
             width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
         
         .add-btn:hover {
@@ -286,6 +428,62 @@
         .add-btn:disabled {
             background-color: #4a4a7a;
             cursor: not-allowed;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #2a2a3e;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h3 {
+            color: #6c8eff;
+            font-size: 20px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: #a0a0c0;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: white;
+        }
+        
+        .modal-body {
+            margin-bottom: 25px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
         }
         
         footer {
@@ -315,7 +513,7 @@
         }
         
         /* Мобильная адаптация */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             body {
                 padding: 10px;
             }
@@ -332,22 +530,73 @@
                 flex-direction: column;
             }
             
-            .queue-item {
+            .tab {
+                min-width: 100%;
+            }
+            
+            .admin-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .admin-controls {
+                justify-content: center;
+            }
+            
+            .queue-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
             
-            .queue-item-actions {
-                margin-left: 0;
-                margin-top: 12px;
-                align-self: flex-end;
+            .queue-stats {
+                width: 100%;
+                justify-content: space-between;
             }
-            
-            .admin-status {
-                flex-direction: column;
-                gap: 12px;
-                align-items: flex-start;
-            }
+        }
+        
+        .csv-data {
+            background-color: #2a2a3e;
+            border: 1px solid #4a4a7a;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .backup-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .queue-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .queue-option {
+            background-color: #4a4a7a;
+            color: #d0d0f0;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .queue-option.active {
+            background-color: #6c8eff;
+            color: white;
+        }
+        
+        .queue-option:hover:not(.active) {
+            background-color: #5a5a8a;
         }
     </style>
 </head>
@@ -358,100 +607,317 @@
             <p class="subtitle">Управление очередями для роликов, музыки и бусти</p>
         </header>
         
-        <div class="admin-status">
-            <div>
-                <p>Статус: <span id="user-role">Пользователь</span></p>
-                <p id="admin-note" style="display: none; color: #ff6b6b; font-size: 14px; margin-top: 4px;">
-                    <i class="fas fa-shield-alt"></i> У вас есть права на добавление и удаление элементов
-                </p>
+        <div class="admin-panel">
+            <div class="admin-status">
+                <div>
+                    <p>Статус: <span id="user-role">Пользователь</span></p>
+                    <p id="admin-note" style="display: none; color: #ff6b6b; font-size: 14px; margin-top: 4px;">
+                        <i class="fas fa-shield-alt"></i> У вас есть права на управление очередями
+                    </p>
+                </div>
+                
+                <div id="password-form" style="display: none;">
+                    <input type="password" id="admin-password" class="password-input" placeholder="Введите пароль админа">
+                    <button id="login-btn" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Войти
+                    </button>
+                </div>
             </div>
-            <button id="toggle-admin" class="toggle-admin-btn">
-                <i class="fas fa-user-shield"></i> Переключить роль
-            </button>
+            
+            <div class="admin-controls" id="admin-controls" style="display: none;">
+                <button id="logout-btn" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </button>
+                <button id="backup-btn" class="btn btn-success">
+                    <i class="fas fa-download"></i> Создать резервную копию
+                </button>
+                <button id="restore-btn" class="btn">
+                    <i class="fas fa-upload"></i> Восстановить из резервной копии
+                </button>
+            </div>
+            
+            <div id="user-controls">
+                <button id="show-password-form" class="btn btn-primary">
+                    <i class="fas fa-user-shield"></i> Войти как админ
+                </button>
+            </div>
         </div>
         
         <div class="tabs">
             <div class="tab active" data-tab="roliki">Ролики</div>
             <div class="tab" data-tab="music">Музыка</div>
             <div class="tab" data-tab="boosti">Очередь на Бусти</div>
+            <div class="tab" data-tab="viewed">Просмотренные</div>
         </div>
         
         <div id="roliki-queue" class="queue-container active">
-            <div class="queue-title">
-                <h2><i class="fas fa-film"></i> Очередь роликов</h2>
-                <div class="queue-count">Элементов: <span id="roliki-count">0</span></div>
+            <div class="queue-header">
+                <div class="queue-title">
+                    <h2><i class="fas fa-film"></i> Очередь роликов</h2>
+                </div>
+                <div class="queue-stats">
+                    <div class="stat">
+                        <i class="fas fa-clock"></i>
+                        <span>В очереди: <span id="roliki-pending-count">0</span></span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Просмотрено: <span id="roliki-viewed-count">0</span></span>
+                    </div>
+                </div>
             </div>
             
-            <div class="queue-list" id="roliki-list">
-                <!-- Здесь будут элементы очереди роликов -->
+            <div class="queue-content">
+                <div class="queue-section">
+                    <h3><i class="fas fa-clock"></i> В очереди</h3>
+                    <div class="queue-list" id="roliki-pending-list">
+                        <!-- Здесь будут элементы очереди роликов -->
+                    </div>
+                </div>
+                
+                <div class="queue-section">
+                    <h3><i class="fas fa-check-circle"></i> Просмотрено</h3>
+                    <div class="queue-list" id="roliki-viewed-list">
+                        <!-- Здесь будут просмотренные ролики -->
+                    </div>
+                </div>
             </div>
             
             <div class="add-form" id="roliki-form">
                 <h3><i class="fas fa-plus-circle"></i> Добавить ролик</h3>
-                <div class="form-group">
-                    <label for="roliki-link">Ссылка на ролик:</label>
-                    <input type="url" id="roliki-link" placeholder="https://youtube.com/watch?v=..." required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="roliki-link"><i class="fas fa-link"></i> Ссылка на ролик:</label>
+                        <input type="url" id="roliki-link" placeholder="https://youtube.com/watch?v=..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="roliki-author"><i class="fas fa-user"></i> Автор:</label>
+                        <input type="text" id="roliki-author" placeholder="Имя автора" required>
+                    </div>
                 </div>
-                <button class="add-btn" id="add-roliki">Добавить в очередь</button>
+                <button class="add-btn" id="add-roliki">
+                    <i class="fas fa-plus"></i> Добавить в очередь
+                </button>
             </div>
         </div>
         
         <div id="music-queue" class="queue-container">
-            <div class="queue-title">
-                <h2><i class="fas fa-music"></i> Очередь музыки</h2>
-                <div class="queue-count">Элементов: <span id="music-count">0</span></div>
+            <div class="queue-header">
+                <div class="queue-title">
+                    <h2><i class="fas fa-music"></i> Очередь музыки</h2>
+                </div>
+                <div class="queue-stats">
+                    <div class="stat">
+                        <i class="fas fa-clock"></i>
+                        <span>В очереди: <span id="music-pending-count">0</span></span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Просмотрено: <span id="music-viewed-count">0</span></span>
+                    </div>
+                </div>
             </div>
             
-            <div class="queue-list" id="music-list">
-                <!-- Здесь будут элементы очереди музыки -->
+            <div class="queue-content">
+                <div class="queue-section">
+                    <h3><i class="fas fa-clock"></i> В очереди</h3>
+                    <div class="queue-list" id="music-pending-list">
+                        <!-- Здесь будут элементы очереди музыки -->
+                    </div>
+                </div>
+                
+                <div class="queue-section">
+                    <h3><i class="fas fa-check-circle"></i> Просмотрено</h3>
+                    <div class="queue-list" id="music-viewed-list">
+                        <!-- Здесь будут просмотренные треки -->
+                    </div>
+                </div>
             </div>
             
             <div class="add-form" id="music-form">
                 <h3><i class="fas fa-plus-circle"></i> Добавить музыку</h3>
-                <div class="form-group">
-                    <label for="music-link">Ссылка на трек:</label>
-                    <input type="url" id="music-link" placeholder="https://spotify.com/track/..." required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="music-link"><i class="fas fa-link"></i> Ссылка на трек:</label>
+                        <input type="url" id="music-link" placeholder="https://spotify.com/track/..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="music-author"><i class="fas fa-user"></i> Автор:</label>
+                        <input type="text" id="music-author" placeholder="Имя автора" required>
+                    </div>
                 </div>
-                <button class="add-btn" id="add-music">Добавить в очередь</button>
+                <button class="add-btn" id="add-music">
+                    <i class="fas fa-plus"></i> Добавить в очередь
+                </button>
             </div>
         </div>
         
         <div id="boosti-queue" class="queue-container">
-            <div class="queue-title">
-                <h2><i class="fas fa-star"></i> Очередь на Бусти</h2>
-                <div class="queue-count">Элементов: <span id="boosti-count">0</span></div>
+            <div class="queue-header">
+                <div class="queue-title">
+                    <h2><i class="fas fa-star"></i> Очередь на Бусти</h2>
+                </div>
+                <div class="queue-stats">
+                    <div class="stat">
+                        <i class="fas fa-clock"></i>
+                        <span>В очереди: <span id="boosti-pending-count">0</span></span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Просмотрено: <span id="boosti-viewed-count">0</span></span>
+                    </div>
+                </div>
             </div>
             
-            <div class="queue-list" id="boosti-list">
-                <!-- Здесь будут элементы очереди на бусти -->
+            <div class="queue-content">
+                <div class="queue-section">
+                    <h3><i class="fas fa-clock"></i> В очереди</h3>
+                    <div class="queue-list" id="boosti-pending-list">
+                        <!-- Здесь будут элементы очереди на бусти -->
+                    </div>
+                </div>
+                
+                <div class="queue-section">
+                    <h3><i class="fas fa-check-circle"></i> Просмотрено</h3>
+                    <div class="queue-list" id="boosti-viewed-list">
+                        <!-- Здесь будут просмотренные бусти -->
+                    </div>
+                </div>
             </div>
             
             <div class="add-form" id="boosti-form">
                 <h3><i class="fas fa-plus-circle"></i> Добавить в очередь на Бусти</h3>
-                <div class="form-group">
-                    <label for="boosti-link">Ссылка на профиль/заказ:</label>
-                    <input type="url" id="boosti-link" placeholder="https://boosty.to/..." required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="boosti-link"><i class="fas fa-link"></i> Ссылка на профиль/заказ:</label>
+                        <input type="url" id="boosti-link" placeholder="https://boosty.to/..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="boosti-author"><i class="fas fa-user"></i> Автор:</label>
+                        <input type="text" id="boosti-author" placeholder="Имя автора" required>
+                    </div>
                 </div>
-                <button class="add-btn" id="add-boosti">Добавить в очередь</button>
+                <button class="add-btn" id="add-boosti">
+                    <i class="fas fa-plus"></i> Добавить в очередь
+                </button>
+            </div>
+        </div>
+        
+        <div id="viewed-queue" class="queue-container">
+            <div class="queue-header">
+                <div class="queue-title">
+                    <h2><i class="fas fa-check-circle"></i> Все просмотренные элементы</h2>
+                </div>
+                <div class="queue-stats">
+                    <div class="stat">
+                        <i class="fas fa-film"></i>
+                        <span>Ролики: <span id="total-viewed-roliki">0</span></span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-music"></i>
+                        <span>Музыка: <span id="total-viewed-music">0</span></span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span>Бусти: <span id="total-viewed-boosti">0</span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="queue-content">
+                <div class="queue-section">
+                    <h3><i class="fas fa-film"></i> Просмотренные ролики</h3>
+                    <div class="queue-list" id="all-viewed-roliki">
+                        <!-- Здесь будут все просмотренные ролики -->
+                    </div>
+                </div>
+                
+                <div class="queue-section">
+                    <h3><i class="fas fa-music"></i> Просмотренная музыка</h3>
+                    <div class="queue-list" id="all-viewed-music">
+                        <!-- Здесь будет вся просмотренная музыка -->
+                    </div>
+                </div>
+                
+                <div class="queue-section">
+                    <h3><i class="fas fa-star"></i> Просмотренные Бусти</h3>
+                    <div class="queue-list" id="all-viewed-boosti">
+                        <!-- Здесь будут все просмотренные бусти -->
+                    </div>
+                </div>
             </div>
         </div>
         
         <footer>
             <p>Приложение "Очередь" для Telegram © 2023</p>
-            <p>Админы могут добавлять и удалять элементы, остальные пользователи — только просматривать</p>
+            <p>Формат элементов: ССЫЛКА | АВТОР | КОГДА ДОБАВЛЕНО</p>
             <a href="https://telegram.org" target="_blank" class="telegram-button">
                 <i class="fab fa-telegram"></i> Открыть в Telegram
             </a>
         </footer>
     </div>
 
+    <!-- Модальное окно для резервного копирования -->
+    <div id="backup-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-download"></i> Резервное копирование</h3>
+                <button class="close-modal" id="close-backup-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="queue-selector">
+                    <button class="queue-option active" data-queue="all">Все очереди</button>
+                    <button class="queue-option" data-queue="roliki">Ролики</button>
+                    <button class="queue-option" data-queue="music">Музыка</button>
+                    <button class="queue-option" data-queue="boosti">Бусти</button>
+                </div>
+                <div class="csv-data" id="csv-preview">
+                    <!-- Здесь будет предпросмотр CSV -->
+                </div>
+                <div class="backup-options">
+                    <button id="copy-csv-btn" class="btn">
+                        <i class="fas fa-copy"></i> Копировать CSV
+                    </button>
+                    <button id="download-csv-btn" class="btn btn-primary">
+                        <i class="fas fa-file-download"></i> Скачать CSV файл
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для восстановления -->
+    <div id="restore-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-upload"></i> Восстановление из резервной копии</h3>
+                <button class="close-modal" id="close-restore-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Вставьте CSV данные для восстановления:</p>
+                <textarea id="restore-csv-data" class="csv-data" rows="10" placeholder="Вставьте CSV данные сюда..."></textarea>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>
+                        <input type="checkbox" id="replace-data" checked>
+                        Заменить существующие данные
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-restore-btn" class="btn btn-danger">Отмена</button>
+                <button id="confirm-restore-btn" class="btn btn-primary">Восстановить</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Состояние приложения
         let isAdmin = false;
+        const ADMIN_PASSWORD = "admin123"; // Пароль по умолчанию
         let queues = {
-            roliki: [],
-            music: [],
-            boosti: []
+            roliki: { pending: [], viewed: [] },
+            music: { pending: [], viewed: [] },
+            boosti: { pending: [], viewed: [] }
         };
         
         // Инициализация при загрузке страницы
@@ -462,11 +928,14 @@
             // Настраиваем вкладки
             setupTabs();
             
-            // Настраиваем кнопку переключения роли
-            setupAdminToggle();
+            // Настраиваем авторизацию
+            setupAuth();
             
             // Настраиваем формы добавления
             setupAddForms();
+            
+            // Настраиваем модальные окна
+            setupModals();
             
             // Обновляем интерфейс
             updateUI();
@@ -474,7 +943,7 @@
         
         // Загрузка данных из localStorage
         function loadFromLocalStorage() {
-            const savedData = localStorage.getItem('telegram-queue-app');
+            const savedData = localStorage.getItem('telegram-queue-app-v2');
             if (savedData) {
                 queues = JSON.parse(savedData);
             }
@@ -482,7 +951,7 @@
         
         // Сохранение данных в localStorage
         function saveToLocalStorage() {
-            localStorage.setItem('telegram-queue-app', JSON.stringify(queues));
+            localStorage.setItem('telegram-queue-app-v2', JSON.stringify(queues));
         }
         
         // Настройка вкладок
@@ -501,16 +970,50 @@
                     // Добавляем активный класс текущей вкладке и контейнеру
                     this.classList.add('active');
                     document.getElementById(`${tabId}-queue`).classList.add('active');
+                    
+                    // Если это вкладка "Просмотренные", обновляем ее
+                    if (tabId === 'viewed') {
+                        updateViewedTab();
+                    }
                 });
             });
         }
         
-        // Настройка переключения роли
-        function setupAdminToggle() {
-            const toggleBtn = document.getElementById('toggle-admin');
-            toggleBtn.addEventListener('click', function() {
-                isAdmin = !isAdmin;
+        // Настройка авторизации
+        function setupAuth() {
+            // Кнопка показа формы ввода пароля
+            document.getElementById('show-password-form').addEventListener('click', function() {
+                document.getElementById('password-form').style.display = 'flex';
+                document.getElementById('user-controls').style.display = 'none';
+                document.getElementById('admin-password').focus();
+            });
+            
+            // Кнопка входа
+            document.getElementById('login-btn').addEventListener('click', function() {
+                const password = document.getElementById('admin-password').value;
+                if (password === ADMIN_PASSWORD) {
+                    isAdmin = true;
+                    document.getElementById('admin-password').value = '';
+                    showNotification('Успешный вход как администратор');
+                } else {
+                    showNotification('Неверный пароль', 'error');
+                    return;
+                }
                 updateUI();
+            });
+            
+            // Кнопка выхода
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                isAdmin = false;
+                showNotification('Вы вышли из режима админа');
+                updateUI();
+            });
+            
+            // Вход по нажатию Enter в поле пароля
+            document.getElementById('admin-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('login-btn').click();
+                }
             });
         }
         
@@ -532,32 +1035,73 @@
             });
             
             // Разрешаем добавлять по нажатию Enter
-            document.getElementById('roliki-link').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') addItem('roliki');
+            ['roliki', 'music', 'boosti'].forEach(queueType => {
+                document.getElementById(`${queueType}-link`).addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') addItem(queueType);
+                });
+                document.getElementById(`${queueType}-author`).addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') addItem(queueType);
+                });
+            });
+        }
+        
+        // Настройка модальных окон
+        function setupModals() {
+            // Модальное окно резервного копирования
+            document.getElementById('backup-btn').addEventListener('click', function() {
+                showBackupModal();
             });
             
-            document.getElementById('music-link').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') addItem('music');
+            document.getElementById('close-backup-modal').addEventListener('click', function() {
+                document.getElementById('backup-modal').style.display = 'none';
             });
             
-            document.getElementById('boosti-link').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') addItem('boosti');
+            // Модальное окно восстановления
+            document.getElementById('restore-btn').addEventListener('click', function() {
+                document.getElementById('restore-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('close-restore-modal').addEventListener('click', function() {
+                document.getElementById('restore-modal').style.display = 'none';
+            });
+            
+            document.getElementById('cancel-restore-btn').addEventListener('click', function() {
+                document.getElementById('restore-modal').style.display = 'none';
+            });
+            
+            // Кнопки в модальном окне резервного копирования
+            document.getElementById('copy-csv-btn').addEventListener('click', copyCSVToClipboard);
+            document.getElementById('download-csv-btn').addEventListener('click', downloadCSV);
+            
+            // Кнопка восстановления данных
+            document.getElementById('confirm-restore-btn').addEventListener('click', restoreFromCSV);
+            
+            // Обработчики выбора очереди для резервного копирования
+            document.querySelectorAll('.queue-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.queue-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    updateCSVPreview();
+                });
             });
         }
         
         // Добавление элемента в очередь
         function addItem(queueType) {
             if (!isAdmin) {
-                alert('Только админы могут добавлять элементы!');
+                showNotification('Только админы могут добавлять элементы!', 'error');
                 return;
             }
             
-            const inputId = `${queueType}-link`;
-            const linkInput = document.getElementById(inputId);
+            const linkInput = document.getElementById(`${queueType}-link`);
+            const authorInput = document.getElementById(`${queueType}-author`);
             const link = linkInput.value.trim();
+            const author = authorInput.value.trim();
             
-            if (!link) {
-                alert('Введите ссылку!');
+            if (!link || !author) {
+                showNotification('Заполните все поля!', 'error');
                 return;
             }
             
@@ -565,7 +1109,7 @@
             try {
                 new URL(link);
             } catch {
-                alert('Введите корректную ссылку!');
+                showNotification('Введите корректную ссылку!', 'error');
                 return;
             }
             
@@ -573,18 +1117,21 @@
             const newItem = {
                 id: Date.now(),
                 url: link,
-                date: new Date().toLocaleString('ru-RU'),
-                addedBy: isAdmin ? 'Админ' : 'Пользователь'
+                author: author,
+                dateAdded: new Date().toLocaleString('ru-RU'),
+                viewed: false,
+                viewedDate: null
             };
             
             // Добавляем в очередь
-            queues[queueType].push(newItem);
+            queues[queueType].pending.push(newItem);
             
             // Сохраняем в localStorage
             saveToLocalStorage();
             
-            // Очищаем поле ввода
+            // Очищаем поля ввода
             linkInput.value = '';
+            authorInput.value = '';
             
             // Обновляем интерфейс
             updateUI();
@@ -593,15 +1140,52 @@
             showNotification(`Элемент добавлен в очередь "${getQueueName(queueType)}"`);
         }
         
-        // Удаление элемента из очереди
-        function removeItem(queueType, id) {
+        // Отметка элемента как просмотренного
+        function markAsViewed(queueType, id) {
             if (!isAdmin) {
-                alert('Только админы могут удалять элементы!');
+                showNotification('Только админы могут отмечать элементы!', 'error');
+                return;
+            }
+            
+            // Находим элемент в pending
+            const itemIndex = queues[queueType].pending.findIndex(item => item.id === id);
+            if (itemIndex === -1) return;
+            
+            // Извлекаем элемент
+            const item = queues[queueType].pending[itemIndex];
+            
+            // Помечаем как просмотренный
+            item.viewed = true;
+            item.viewedDate = new Date().toLocaleString('ru-RU');
+            
+            // Перемещаем из pending в viewed
+            queues[queueType].pending.splice(itemIndex, 1);
+            queues[queueType].viewed.push(item);
+            
+            // Сохраняем в localStorage
+            saveToLocalStorage();
+            
+            // Обновляем интерфейс
+            updateUI();
+            
+            // Показываем уведомление
+            showNotification('Элемент отмечен как просмотренный');
+        }
+        
+        // Удаление элемента из очереди
+        function removeItem(queueType, id, isViewed = false) {
+            if (!isAdmin) {
+                showNotification('Только админы могут удалять элементы!', 'error');
                 return;
             }
             
             if (confirm('Вы уверены, что хотите удалить этот элемент?')) {
-                queues[queueType] = queues[queueType].filter(item => item.id !== id);
+                if (isViewed) {
+                    queues[queueType].viewed = queues[queueType].viewed.filter(item => item.id !== id);
+                } else {
+                    queues[queueType].pending = queues[queueType].pending.filter(item => item.id !== id);
+                }
+                
                 saveToLocalStorage();
                 updateUI();
                 showNotification('Элемент удален из очереди');
@@ -623,82 +1207,402 @@
             // Обновляем отображение роли
             document.getElementById('user-role').textContent = isAdmin ? 'Админ' : 'Пользователь';
             document.getElementById('admin-note').style.display = isAdmin ? 'block' : 'none';
+            document.getElementById('admin-controls').style.display = isAdmin ? 'flex' : 'none';
+            document.getElementById('password-form').style.display = 'none';
+            document.getElementById('user-controls').style.display = isAdmin ? 'none' : 'block';
+            
+            // Показываем/скрываем формы добавления в зависимости от роли
+            document.querySelectorAll('.add-form').forEach(form => {
+                form.style.display = isAdmin ? 'block' : 'none';
+            });
             
             // Обновляем каждую очередь
             updateQueueUI('roliki');
             updateQueueUI('music');
             updateQueueUI('boosti');
             
-            // Показываем/скрываем формы добавления в зависимости от роли
-            document.querySelectorAll('.add-form').forEach(form => {
-                form.style.display = isAdmin ? 'block' : 'none';
-            });
+            // Обновляем вкладку "Просмотренные" если она активна
+            if (document.querySelector('.tab[data-tab="viewed"]').classList.contains('active')) {
+                updateViewedTab();
+            }
         }
         
         // Обновление отображения конкретной очереди
         function updateQueueUI(queueType) {
-            const queueList = document.getElementById(`${queueType}-list`);
-            const queueCount = document.getElementById(`${queueType}-count`);
-            const queue = queues[queueType];
+            const pendingList = document.getElementById(`${queueType}-pending-list`);
+            const viewedList = document.getElementById(`${queueType}-viewed-list`);
+            const pendingCount = document.getElementById(`${queueType}-pending-count`);
+            const viewedCount = document.getElementById(`${queueType}-viewed-count`);
             
-            // Обновляем счетчик
-            queueCount.textContent = queue.length;
+            // Обновляем счетчики
+            pendingCount.textContent = queues[queueType].pending.length;
+            viewedCount.textContent = queues[queueType].viewed.length;
             
-            // Очищаем список
-            queueList.innerHTML = '';
+            // Очищаем списки
+            pendingList.innerHTML = '';
+            viewedList.innerHTML = '';
             
             // Если очередь пуста
-            if (queue.length === 0) {
-                queueList.innerHTML = '<div class="empty-queue">Очередь пуста. Добавьте первый элемент!</div>';
-                return;
+            if (queues[queueType].pending.length === 0) {
+                pendingList.innerHTML = '<div class="empty-queue">Очередь пуста. Добавьте первый элемент!</div>';
+            } else {
+                // Добавляем элементы в pending
+                queues[queueType].pending.forEach(item => {
+                    pendingList.appendChild(createQueueItemElement(queueType, item, false));
+                });
             }
             
-            // Добавляем элементы
-            queue.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.className = 'queue-item';
+            // Если просмотренных нет
+            if (queues[queueType].viewed.length === 0) {
+                viewedList.innerHTML = '<div class="empty-queue">Нет просмотренных элементов</div>';
+            } else {
+                // Добавляем элементы в viewed
+                queues[queueType].viewed.forEach(item => {
+                    viewedList.appendChild(createQueueItemElement(queueType, item, true));
+                });
+            }
+        }
+        
+        // Обновление вкладки "Просмотренные"
+        function updateViewedTab() {
+            // Обновляем общие счетчики
+            document.getElementById('total-viewed-roliki').textContent = queues.roliki.viewed.length;
+            document.getElementById('total-viewed-music').textContent = queues.music.viewed.length;
+            document.getElementById('total-viewed-boosti').textContent = queues.boosti.viewed.length;
+            
+            // Очищаем списки
+            document.getElementById('all-viewed-roliki').innerHTML = '';
+            document.getElementById('all-viewed-music').innerHTML = '';
+            document.getElementById('all-viewed-boosti').innerHTML = '';
+            
+            // Заполняем списки
+            ['roliki', 'music', 'boosti'].forEach(queueType => {
+                const container = document.getElementById(`all-viewed-${queueType}`);
                 
-                // Извлекаем домен для отображения
-                let domain = '';
-                try {
-                    const url = new URL(item.url);
-                    domain = url.hostname.replace('www.', '');
-                } catch {
-                    domain = 'неизвестный источник';
+                if (queues[queueType].viewed.length === 0) {
+                    container.innerHTML = '<div class="empty-queue">Нет просмотренных элементов</div>';
+                } else {
+                    queues[queueType].viewed.forEach(item => {
+                        container.appendChild(createQueueItemElement(queueType, item, true));
+                    });
                 }
-                
-                itemElement.innerHTML = `
-                    <div class="queue-item-content">
-                        <a href="${item.url}" target="_blank" class="queue-item-link">
-                            <i class="fas fa-link"></i> ${domain}
-                        </a>
-                        <div class="queue-item-date">
-                            Добавлено: ${item.date} | ${item.addedBy}
-                        </div>
-                    </div>
-                    ${isAdmin ? `
-                    <div class="queue-item-actions">
-                        <button onclick="removeItem('${queueType}', ${item.id})" title="Удалить">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                    ` : ''}
-                `;
-                
-                queueList.appendChild(itemElement);
             });
         }
         
+        // Создание элемента очереди
+        function createQueueItemElement(queueType, item, isViewed) {
+            const itemElement = document.createElement('div');
+            itemElement.className = `queue-item ${isViewed ? 'viewed' : ''}`;
+            
+            // Извлекаем домен для отображения
+            let domain = '';
+            try {
+                const url = new URL(item.url);
+                domain = url.hostname.replace('www.', '');
+            } catch {
+                domain = 'неизвестный источник';
+            }
+            
+            // Создаем содержимое
+            let actionsHTML = '';
+            if (isAdmin) {
+                if (!isViewed) {
+                    actionsHTML = `
+                        <div class="queue-item-actions">
+                            <button onclick="markAsViewed('${queueType}', ${item.id})" class="mark-viewed-btn" title="Отметить как просмотренное">
+                                <i class="fas fa-check-circle"></i> Просмотрено
+                            </button>
+                            <button onclick="removeItem('${queueType}', ${item.id}, false)" class="delete-btn" title="Удалить">
+                                <i class="fas fa-trash"></i> Удалить
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    actionsHTML = `
+                        <div class="queue-item-actions">
+                            <button onclick="removeItem('${queueType}', ${item.id}, true)" class="delete-btn" title="Удалить">
+                                <i class="fas fa-trash"></i> Удалить
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+            
+            let detailsHTML = '';
+            if (isViewed) {
+                detailsHTML = `
+                    <div class="queue-item-details">
+                        <span><i class="fas fa-user"></i> ${item.author}</span>
+                        <span><i class="fas fa-calendar-plus"></i> ${item.dateAdded}</span>
+                        <span><i class="fas fa-check-circle"></i> ${item.viewedDate}</span>
+                    </div>
+                `;
+            } else {
+                detailsHTML = `
+                    <div class="queue-item-details">
+                        <span><i class="fas fa-user"></i> ${item.author}</span>
+                        <span><i class="fas fa-calendar-plus"></i> ${item.dateAdded}</span>
+                    </div>
+                `;
+            }
+            
+            itemElement.innerHTML = `
+                <a href="${item.url}" target="_blank" class="queue-item-link">
+                    <i class="fas fa-link"></i> ${domain}
+                </a>
+                ${detailsHTML}
+                ${actionsHTML}
+            `;
+            
+            return itemElement;
+        }
+        
+        // Показать модальное окно резервного копирования
+        function showBackupModal() {
+            document.getElementById('backup-modal').style.display = 'flex';
+            updateCSVPreview();
+        }
+        
+        // Обновить предпросмотр CSV
+        function updateCSVPreview() {
+            const selectedQueue = document.querySelector('.queue-option.active').getAttribute('data-queue');
+            const csvData = generateCSV(selectedQueue);
+            document.getElementById('csv-preview').textContent = csvData;
+        }
+        
+        // Генерация CSV данных
+        function generateCSV(queueType) {
+            let csv = 'Тип очереди,Статус,Ссылка,Автор,Дата добавления,Дата просмотра\n';
+            
+            if (queueType === 'all') {
+                // Все очереди
+                ['roliki', 'music', 'boosti'].forEach(type => {
+                    const queueName = getQueueName(type);
+                    
+                    // Pending элементы
+                    queues[type].pending.forEach(item => {
+                        csv += `"${queueName}","В очереди","${item.url}","${item.author}","${item.dateAdded}",""\n`;
+                    });
+                    
+                    // Viewed элементы
+                    queues[type].viewed.forEach(item => {
+                        csv += `"${queueName}","Просмотрено","${item.url}","${item.author}","${item.dateAdded}","${item.viewedDate}"\n`;
+                    });
+                });
+            } else {
+                // Конкретная очередь
+                const queueName = getQueueName(queueType);
+                
+                // Pending элементы
+                queues[queueType].pending.forEach(item => {
+                    csv += `"${queueName}","В очереди","${item.url}","${item.author}","${item.dateAdded}",""\n`;
+                });
+                
+                // Viewed элементы
+                queues[queueType].viewed.forEach(item => {
+                    csv += `"${queueName}","Просмотрено","${item.url}","${item.author}","${item.dateAdded}","${item.viewedDate}"\n`;
+                });
+            }
+            
+            return csv;
+        }
+        
+        // Копирование CSV в буфер обмена
+        function copyCSVToClipboard() {
+            const csvData = document.getElementById('csv-preview').textContent;
+            navigator.clipboard.writeText(csvData).then(() => {
+                showNotification('CSV скопирован в буфер обмена');
+            }).catch(err => {
+                showNotification('Не удалось скопировать CSV', 'error');
+                console.error('Ошибка копирования:', err);
+            });
+        }
+        
+        // Скачивание CSV файла
+        function downloadCSV() {
+            const selectedQueue = document.querySelector('.queue-option.active').getAttribute('data-queue');
+            const csvData = generateCSV(selectedQueue);
+            const queueName = selectedQueue === 'all' ? 'Все очереди' : getQueueName(selectedQueue);
+            const filename = `Очередь_${queueName}_${new Date().toISOString().slice(0, 10)}.csv`;
+            
+            const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification(`Файл ${filename} скачан`);
+        }
+        
+        // Восстановление из CSV
+        function restoreFromCSV() {
+            const csvData = document.getElementById('restore-csv-data').value.trim();
+            const replaceData = document.getElementById('replace-data').checked;
+            
+            if (!csvData) {
+                showNotification('Введите CSV данные!', 'error');
+                return;
+            }
+            
+            try {
+                const result = parseCSV(csvData, replaceData);
+                
+                if (result.success) {
+                    // Сохраняем в localStorage
+                    saveToLocalStorage();
+                    
+                    // Обновляем интерфейс
+                    updateUI();
+                    
+                    // Закрываем модальное окно
+                    document.getElementById('restore-modal').style.display = 'none';
+                    document.getElementById('restore-csv-data').value = '';
+                    
+                    showNotification(`Восстановлено: ${result.added} элементов добавлено, ${result.skipped} пропущено`);
+                } else {
+                    showNotification(`Ошибка: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showNotification('Ошибка при разборе CSV данных', 'error');
+                console.error(error);
+            }
+        }
+        
+        // Парсинг CSV данных
+        function parseCSV(csvData, replaceData) {
+            const lines = csvData.split('\n');
+            if (lines.length < 2) {
+                return { success: false, error: 'Неверный формат CSV' };
+            }
+            
+            // Парсим заголовок
+            const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+            
+            // Определяем индексы столбцов
+            const typeIndex = headers.indexOf('Тип очереди');
+            const statusIndex = headers.indexOf('Статус');
+            const urlIndex = headers.indexOf('Ссылка');
+            const authorIndex = headers.indexOf('Автор');
+            const dateAddedIndex = headers.indexOf('Дата добавления');
+            const viewedDateIndex = headers.indexOf('Дата просмотра');
+            
+            if (typeIndex === -1 || statusIndex === -1 || urlIndex === -1 || authorIndex === -1 || dateAddedIndex === -1) {
+                return { success: false, error: 'Неверные заголовки CSV' };
+            }
+            
+            // Очищаем очереди если нужно
+            if (replaceData) {
+                queues = {
+                    roliki: { pending: [], viewed: [] },
+                    music: { pending: [], viewed: [] },
+                    boosti: { pending: [], viewed: [] }
+                };
+            }
+            
+            let added = 0;
+            let skipped = 0;
+            
+            // Обрабатываем строки данных
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                // Простой парсинг CSV (для сложных случаев нужна библиотека)
+                const values = parseCSVLine(line);
+                
+                if (values.length < 5) {
+                    skipped++;
+                    continue;
+                }
+                
+                const queueType = getQueueTypeByName(values[typeIndex]);
+                const status = values[statusIndex];
+                const url = values[urlIndex];
+                const author = values[authorIndex];
+                const dateAdded = values[dateAddedIndex];
+                const viewedDate = values[viewedDateIndex] || null;
+                
+                if (!queueType || !url || !author || !dateAdded) {
+                    skipped++;
+                    continue;
+                }
+                
+                // Создаем элемент
+                const item = {
+                    id: Date.now() + i, // Уникальный ID
+                    url: url,
+                    author: author,
+                    dateAdded: dateAdded,
+                    viewed: status === 'Просмотрено',
+                    viewedDate: viewedDate
+                };
+                
+                // Добавляем в соответствующую очередь
+                if (status === 'Просмотрено') {
+                    queues[queueType].viewed.push(item);
+                } else {
+                    queues[queueType].pending.push(item);
+                }
+                
+                added++;
+            }
+            
+            return { success: true, added, skipped };
+        }
+        
+        // Простой парсер CSV строки
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current);
+            return result.map(v => v.replace(/^"|"$/g, '').trim());
+        }
+        
+        // Получение типа очереди по имени
+        function getQueueTypeByName(name) {
+            const mapping = {
+                'Ролики': 'roliki',
+                'Музыка': 'music',
+                'Очередь на Бусти': 'boosti',
+                'Бусти': 'boosti'
+            };
+            return mapping[name] || null;
+        }
+        
         // Показать уведомление
-        function showNotification(message) {
+        function showNotification(message, type = 'success') {
             // Создаем элемент уведомления
             const notification = document.createElement('div');
             notification.textContent = message;
+            
+            const bgColor = type === 'error' ? '#ff6b6b' : '#6c8eff';
+            
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background-color: #6c8eff;
+                background-color: ${bgColor};
                 color: white;
                 padding: 15px 20px;
                 border-radius: 10px;
@@ -706,6 +1610,7 @@
                 z-index: 1000;
                 font-weight: bold;
                 animation: slideIn 0.3s ease-out;
+                max-width: 300px;
             `;
             
             document.body.appendChild(notification);
@@ -738,45 +1643,74 @@
         
         // Инициализация демо-данных (если localStorage пуст)
         function initDemoData() {
-            const hasData = localStorage.getItem('telegram-queue-app');
+            const hasData = localStorage.getItem('telegram-queue-app-v2');
             if (!hasData) {
                 queues = {
-                    roliki: [
-                        {
-                            id: 1,
-                            url: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
-                            date: '01.11.2023, 10:30:15',
-                            addedBy: 'Админ'
-                        },
-                        {
-                            id: 2,
-                            url: 'https://vimeo.com/123456789',
-                            date: '02.11.2023, 14:22:45',
-                            addedBy: 'Админ'
-                        }
-                    ],
-                    music: [
-                        {
-                            id: 3,
-                            url: 'https://spotify.com/track/4cOdK2wGLETKBW3PvgPWqT',
-                            date: '30.10.2023, 09:15:22',
-                            addedBy: 'Админ'
-                        }
-                    ],
-                    boosti: [
-                        {
-                            id: 4,
-                            url: 'https://boosty.to/examplecreator',
-                            date: '29.10.2023, 18:45:10',
-                            addedBy: 'Админ'
-                        },
-                        {
-                            id: 5,
-                            url: 'https://boosty.to/anothercreator',
-                            date: '31.10.2023, 12:10:05',
-                            addedBy: 'Админ'
-                        }
-                    ]
+                    roliki: {
+                        pending: [
+                            {
+                                id: 1,
+                                url: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
+                                author: 'Иван Иванов',
+                                dateAdded: '01.11.2023, 10:30:15',
+                                viewed: false,
+                                viewedDate: null
+                            },
+                            {
+                                id: 2,
+                                url: 'https://vimeo.com/123456789',
+                                author: 'Петр Петров',
+                                dateAdded: '02.11.2023, 14:22:45',
+                                viewed: false,
+                                viewedDate: null
+                            }
+                        ],
+                        viewed: [
+                            {
+                                id: 3,
+                                url: 'https://youtube.com/watch?v=abcdefg',
+                                author: 'Сергей Сергеев',
+                                dateAdded: '30.10.2023, 09:15:22',
+                                viewed: true,
+                                viewedDate: '01.11.2023, 11:45:30'
+                            }
+                        ]
+                    },
+                    music: {
+                        pending: [
+                            {
+                                id: 4,
+                                url: 'https://spotify.com/track/4cOdK2wGLETKBW3PvgPWqT',
+                                author: 'Анна Аннова',
+                                dateAdded: '30.10.2023, 09:15:22',
+                                viewed: false,
+                                viewedDate: null
+                            }
+                        ],
+                        viewed: []
+                    },
+                    boosti: {
+                        pending: [
+                            {
+                                id: 5,
+                                url: 'https://boosty.to/examplecreator',
+                                author: 'Максим Максимов',
+                                dateAdded: '29.10.2023, 18:45:10',
+                                viewed: false,
+                                viewedDate: null
+                            }
+                        ],
+                        viewed: [
+                            {
+                                id: 6,
+                                url: 'https://boosty.to/anothercreator',
+                                author: 'Ольга Ольгова',
+                                dateAdded: '31.10.2023, 12:10:05',
+                                viewed: true,
+                                viewedDate: '02.11.2023, 15:30:45'
+                            }
+                        ]
+                    }
                 };
                 saveToLocalStorage();
                 updateUI();
@@ -789,12 +1723,38 @@
         // Функция для сброса данных (для тестирования)
         window.resetData = function() {
             if (confirm('Вы уверены, что хотите сбросить все данные?')) {
-                localStorage.removeItem('telegram-queue-app');
-                queues = { roliki: [], music: [], boosti: [] };
+                localStorage.removeItem('telegram-queue-app-v2');
+                queues = {
+                    roliki: { pending: [], viewed: [] },
+                    music: { pending: [], viewed: [] },
+                    boosti: { pending: [], viewed: [] }
+                };
                 updateUI();
                 showNotification('Все данные сброшены');
             }
         };
+        
+        // Функция для изменения пароля (для админов)
+        window.changePassword = function() {
+            if (!isAdmin) {
+                showNotification('Только админы могут менять пароль!', 'error');
+                return;
+            }
+            
+            const newPassword = prompt('Введите новый пароль для админа:');
+            if (newPassword && newPassword.length >= 4) {
+                // В реальном приложении пароль должен храниться на сервере
+                // Здесь мы только покажем сообщение
+                showNotification('Пароль изменен. В реальном приложении пароль должен храниться на сервере.');
+            } else if (newPassword) {
+                showNotification('Пароль должен быть не менее 4 символов', 'error');
+            }
+        };
+        
+        // Автоматически инициализируем демо-данные если нет сохраненных
+        if (!localStorage.getItem('telegram-queue-app-v2')) {
+            initDemoData();
+        }
     </script>
 </body>
 </html>
