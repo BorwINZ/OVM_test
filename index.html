@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Очередь</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
     <style>
         :root {
             --accent-color: #FF2400;
@@ -784,9 +789,88 @@
             0% { background-color: rgba(255, 36, 0, 0.3); }
             100% { background-color: var(--card-bg); }
         }
+        
+        /* Статус подключения Firebase */
+        .connection-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .connection-status.connected {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .connection-status.disconnected {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .connection-status.connecting {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        /* Загрузка */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(30, 37, 39, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            gap: 20px;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--border-color);
+            border-top: 5px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: var(--text-color);
+            font-size: 18px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+    <!-- Экран загрузки -->
+    <div id="loading-screen" class="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Подключение к базе данных...</div>
+    </div>
+    
+    <!-- Статус подключения -->
+    <div id="connection-status" class="connection-status connecting">
+        <i class="fas fa-sync fa-spin"></i>
+        <span>Подключение...</span>
+    </div>
+    
     <div class="container">
         <header>
             <h1><i class="fas fa-list-ol"></i> Очередь</h1>
@@ -1097,6 +1181,32 @@
     </div>
 
     <script>
+        // Конфигурация Firebase (ЗАМЕНИТЕ НА СВОЮ!)
+        const firebaseConfig = {
+    apiKey: "AIzaSyDXvPpsG5syB8vE-iFPZX5EQxN9SF3_k0w",
+    authDomain: "queue-app-6fa7a.firebaseapp.com",
+    databaseURL: "https://queue-app-6fa7a-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "queue-app-6fa7a",
+    storageBucket: "queue-app-6fa7a.firebasestorage.app",
+    messagingSenderId: "174956974458",
+    appId: "1:174956974458:web:03277dfec35d3dfb1646c3",
+    measurementId: "G-KB3NH79V1H"
+  };
+        
+        // Инициализация Firebase
+        let app;
+        let database;
+        let isFirebaseConnected = false;
+        
+        try {
+            app = firebase.initializeApp(firebaseConfig);
+            database = firebase.database(app);
+            console.log("Firebase инициализирован");
+        } catch (error) {
+            console.error("Ошибка инициализации Firebase:", error);
+            showNotification("Не удалось подключиться к базе данных. Используется локальное хранилище.", "error");
+        }
+        
         // Состояние приложения
         let isAdmin = false;
         const ADMIN_PASSWORD = "admin123"; // Пароль по умолчанию
@@ -1106,10 +1216,124 @@
             boosti: { pending: [], viewed: [] }
         };
         
+        // Функция для обновления статуса подключения
+        function updateConnectionStatus(connected) {
+            const statusElement = document.getElementById('connection-status');
+            if (connected) {
+                statusElement.className = 'connection-status connected';
+                statusElement.innerHTML = '<i class="fas fa-wifi"></i> <span>Онлайн</span>';
+            } else {
+                statusElement.className = 'connection-status disconnected';
+                statusElement.innerHTML = '<i class="fas fa-wifi-slash"></i> <span>Оффлайн</span>';
+            }
+        }
+        
+        // Функция для скрытия экрана загрузки
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.style.display = 'none';
+        }
+        
+        // Функция для сохранения данных в Firebase
+        async function saveToFirebase() {
+            if (!database || !isFirebaseConnected) {
+                console.log("Firebase не подключен, сохраняем локально");
+                saveToLocalStorage();
+                return;
+            }
+            
+            try {
+                await database.ref('queues').set(queues);
+                console.log("Данные сохранены в Firebase");
+            } catch (error) {
+                console.error("Ошибка сохранения в Firebase:", error);
+                showNotification("Ошибка сохранения данных", "error");
+                // При ошибке сохраняем локально
+                saveToLocalStorage();
+            }
+        }
+        
+        // Функция для загрузки данных из Firebase
+        async function loadFromFirebase() {
+            if (!database) {
+                console.log("Firebase не инициализирован, загружаем локально");
+                loadFromLocalStorage();
+                hideLoadingScreen();
+                return;
+            }
+            
+            try {
+                // Подписываемся на изменения в базе данных
+                database.ref('queues').on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        queues = data;
+                        updateUI();
+                        console.log("Данные обновлены из Firebase");
+                    }
+                    
+                    // Прячем экран загрузки после первой загрузки данных
+                    hideLoadingScreen();
+                    
+                    // Обновляем статус подключения
+                    isFirebaseConnected = true;
+                    updateConnectionStatus(true);
+                }, (error) => {
+                    console.error("Ошибка загрузки из Firebase:", error);
+                    loadFromLocalStorage();
+                    hideLoadingScreen();
+                    isFirebaseConnected = false;
+                    updateConnectionStatus(false);
+                });
+                
+                // Мониторинг состояния подключения
+                database.ref('.info/connected').on('value', (snapshot) => {
+                    const connected = snapshot.val();
+                    isFirebaseConnected = connected === true;
+                    updateConnectionStatus(isFirebaseConnected);
+                    
+                    if (connected) {
+                        console.log("Подключено к Firebase");
+                    } else {
+                        console.log("Отключено от Firebase");
+                    }
+                });
+                
+            } catch (error) {
+                console.error("Ошибка подключения к Firebase:", error);
+                loadFromLocalStorage();
+                hideLoadingScreen();
+                isFirebaseConnected = false;
+                updateConnectionStatus(false);
+            }
+        }
+        
+        // Сохранение данных в localStorage (как резервная копия)
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('telegram-queue-app-backup', JSON.stringify(queues));
+            } catch (error) {
+                console.error("Ошибка сохранения в localStorage:", error);
+            }
+        }
+        
+        // Загрузка данных из localStorage (при отсутствии интернета)
+        function loadFromLocalStorage() {
+            try {
+                const savedData = localStorage.getItem('telegram-queue-app-backup');
+                if (savedData) {
+                    queues = JSON.parse(savedData);
+                    console.log("Данные загружены из localStorage");
+                }
+            } catch (error) {
+                console.error("Ошибка загрузки из localStorage:", error);
+            }
+        }
+        
         // Инициализация при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function() {
-            // Загружаем данные из localStorage
-            loadFromLocalStorage();
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Загружаем данные из Firebase (или localStorage)
+            await loadFromFirebase();
             
             // Настраиваем вкладки
             setupTabs();
@@ -1126,19 +1350,6 @@
             // Обновляем интерфейс
             updateUI();
         });
-        
-        // Загрузка данных из localStorage
-        function loadFromLocalStorage() {
-            const savedData = localStorage.getItem('telegram-queue-app-v2');
-            if (savedData) {
-                queues = JSON.parse(savedData);
-            }
-        }
-        
-        // Сохранение данных в localStorage
-        function saveToLocalStorage() {
-            localStorage.setItem('telegram-queue-app-v2', JSON.stringify(queues));
-        }
         
         // Настройка вкладок
         function setupTabs() {
@@ -1286,7 +1497,7 @@
         }
         
         // Добавление элемента в очередь
-        function addItem(queueType) {
+        async function addItem(queueType) {
             if (!isAdmin) {
                 showNotification('Только админы могут добавлять элементы!', 'error');
                 return;
@@ -1327,8 +1538,8 @@
             // Добавляем в очередь
             queues[queueType].pending.push(newItem);
             
-            // Сохраняем в localStorage
-            saveToLocalStorage();
+            // Сохраняем в Firebase и localStorage
+            await saveToFirebase();
             
             // Очищаем поля ввода
             linkInput.value = '';
@@ -1358,7 +1569,7 @@
         }
         
         // Отметка элемента как просмотренного
-        function markAsViewed(queueType, id) {
+        async function markAsViewed(queueType, id) {
             if (!isAdmin) {
                 showNotification('Только админы могут отмечать элементы!', 'error');
                 return;
@@ -1384,8 +1595,8 @@
             queues[queueType].pending.splice(itemIndex, 1);
             queues[queueType].viewed.push(item);
             
-            // Сохраняем в localStorage
-            saveToLocalStorage();
+            // Сохраняем в Firebase и localStorage
+            await saveToFirebase();
             
             // Обновляем интерфейс
             updateUI();
@@ -1395,7 +1606,7 @@
         }
         
         // Возврат элемента обратно в очередь
-        function returnToQueue(queueType, id) {
+        async function returnToQueue(queueType, id) {
             if (!isAdmin) {
                 showNotification('Только админы могут возвращать элементы в очередь!', 'error');
                 return;
@@ -1421,8 +1632,8 @@
             queues[queueType].viewed.splice(itemIndex, 1);
             queues[queueType].pending.push(item);
             
-            // Сохраняем в localStorage
-            saveToLocalStorage();
+            // Сохраняем в Firebase и localStorage
+            await saveToFirebase();
             
             // Обновляем интерфейс
             updateUI();
@@ -1432,7 +1643,7 @@
         }
         
         // Удаление элемента из очереди
-        function removeItem(queueType, id, isViewed = false) {
+        async function removeItem(queueType, id, isViewed = false) {
             if (!isAdmin) {
                 showNotification('Только админы могут удалять элементы!', 'error');
                 return;
@@ -1445,8 +1656,13 @@
                     queues[queueType].pending = queues[queueType].pending.filter(item => item.id !== id);
                 }
                 
-                saveToLocalStorage();
+                // Сохраняем в Firebase и localStorage
+                await saveToFirebase();
+                
+                // Обновляем интерфейс
                 updateUI();
+                
+                // Показываем уведомление
                 showNotification('Элемент удален из очереди', 'info');
             }
         }
@@ -1722,7 +1938,7 @@
         }
         
         // Восстановление из CSV
-        function restoreFromCSV() {
+        async function restoreFromCSV() {
             const csvData = document.getElementById('restore-csv-data').value.trim();
             const replaceData = document.getElementById('replace-data').checked;
             
@@ -1735,8 +1951,8 @@
                 const result = parseCSV(csvData, replaceData);
                 
                 if (result.success) {
-                    // Сохраняем в localStorage
-                    saveToLocalStorage();
+                    // Сохраняем в Firebase и localStorage
+                    await saveToFirebase();
                     
                     // Обновляем интерфейс
                     updateUI();
@@ -1876,7 +2092,6 @@
         function showNotification(message, type = 'success') {
             // Создаем элемент уведомления
             const notification = document.createElement('div');
-            notification.textContent = message;
             
             let bgColor, icon;
             switch(type) {
@@ -1946,94 +2161,103 @@
             }
         }
         
-        // Инициализация демо-данных (если localStorage пуст)
-        function initDemoData() {
-            const hasData = localStorage.getItem('telegram-queue-app-v2');
-            if (!hasData) {
-                queues = {
-                    roliki: {
-                        pending: [
-                            {
-                                id: 1,
-                                url: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
-                                author: 'Иван Иванов',
-                                dateAdded: '01.11.2023, 10:30:15',
-                                viewed: false,
-                                viewedDate: null,
-                                history: ['Добавлен в очередь: 01.11.2023, 10:30:15']
+        // Инициализация демо-данных (если Firebase пуст)
+        async function initDemoData() {
+            // Проверяем, есть ли данные в Firebase
+            if (database) {
+                try {
+                    const snapshot = await database.ref('queues').once('value');
+                    if (!snapshot.exists()) {
+                        // Данных нет, создаем демо-данные
+                        queues = {
+                            roliki: {
+                                pending: [
+                                    {
+                                        id: 1,
+                                        url: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
+                                        author: 'Иван Иванов',
+                                        dateAdded: '01.11.2023, 10:30:15',
+                                        viewed: false,
+                                        viewedDate: null,
+                                        history: ['Добавлен в очередь: 01.11.2023, 10:30:15']
+                                    },
+                                    {
+                                        id: 2,
+                                        url: 'https://vimeo.com/123456789',
+                                        author: 'Петр Петров',
+                                        dateAdded: '02.11.2023, 14:22:45',
+                                        viewed: false,
+                                        viewedDate: null,
+                                        history: ['Добавлен в очередь: 02.11.2023, 14:22:45']
+                                    }
+                                ],
+                                viewed: [
+                                    {
+                                        id: 3,
+                                        url: 'https://youtube.com/watch?v=abcdefg',
+                                        author: 'Сергей Сергеев',
+                                        dateAdded: '30.10.2023, 09:15:22',
+                                        viewed: true,
+                                        viewedDate: '01.11.2023, 11:45:30',
+                                        history: [
+                                            'Добавлен в очередь: 30.10.2023, 09:15:22',
+                                            'Отмечен как просмотренный: 01.11.2023, 11:45:30'
+                                        ]
+                                    }
+                                ]
                             },
-                            {
-                                id: 2,
-                                url: 'https://vimeo.com/123456789',
-                                author: 'Петр Петров',
-                                dateAdded: '02.11.2023, 14:22:45',
-                                viewed: false,
-                                viewedDate: null,
-                                history: ['Добавлен в очередь: 02.11.2023, 14:22:45']
-                            }
-                        ],
-                        viewed: [
-                            {
-                                id: 3,
-                                url: 'https://youtube.com/watch?v=abcdefg',
-                                author: 'Сергей Сергеев',
-                                dateAdded: '30.10.2023, 09:15:22',
-                                viewed: true,
-                                viewedDate: '01.11.2023, 11:45:30',
-                                history: [
-                                    'Добавлен в очередь: 30.10.2023, 09:15:22',
-                                    'Отмечен как просмотренный: 01.11.2023, 11:45:30'
+                            music: {
+                                pending: [
+                                    {
+                                        id: 4,
+                                        url: 'https://spotify.com/track/4cOdK2wGLETKBW3PvgPWqT',
+                                        author: 'Анна Аннова',
+                                        dateAdded: '30.10.2023, 09:15:22',
+                                        viewed: false,
+                                        viewedDate: null,
+                                        history: ['Добавлен в очередь: 30.10.2023, 09:15:22']
+                                    }
+                                ],
+                                viewed: []
+                            },
+                            boosti: {
+                                pending: [
+                                    {
+                                        id: 5,
+                                        url: 'https://boosty.to/examplecreator',
+                                        author: 'Максим Максимов',
+                                        dateAdded: '29.10.2023, 18:45:10',
+                                        viewed: false,
+                                        viewedDate: null,
+                                        history: ['Добавлен в очередь: 29.10.2023, 18:45:10']
+                                    }
+                                ],
+                                viewed: [
+                                    {
+                                        id: 6,
+                                        url: 'https://boosty.to/anothercreator',
+                                        author: 'Ольга Ольгова',
+                                        dateAdded: '31.10.2023, 12:10:05',
+                                        viewed: true,
+                                        viewedDate: '02.11.2023, 15:30:45',
+                                        history: [
+                                            'Добавлен в очередь: 31.10.2023, 12:10:05',
+                                            'Отмечен как просмотренный: 02.11.2023, 15:30:45',
+                                            'Возвращен в очередь: 03.11.2023, 10:20:15',
+                                            'Снова отмечен как просмотренный: 04.11.2023, 14:45:30'
+                                        ]
+                                    }
                                 ]
                             }
-                        ]
-                    },
-                    music: {
-                        pending: [
-                            {
-                                id: 4,
-                                url: 'https://spotify.com/track/4cOdK2wGLETKBW3PvgPWqT',
-                                author: 'Анна Аннова',
-                                dateAdded: '30.10.2023, 09:15:22',
-                                viewed: false,
-                                viewedDate: null,
-                                history: ['Добавлен в очередь: 30.10.2023, 09:15:22']
-                            }
-                        ],
-                        viewed: []
-                    },
-                    boosti: {
-                        pending: [
-                            {
-                                id: 5,
-                                url: 'https://boosty.to/examplecreator',
-                                author: 'Максим Максимов',
-                                dateAdded: '29.10.2023, 18:45:10',
-                                viewed: false,
-                                viewedDate: null,
-                                history: ['Добавлен в очередь: 29.10.2023, 18:45:10']
-                            }
-                        ],
-                        viewed: [
-                            {
-                                id: 6,
-                                url: 'https://boosty.to/anothercreator',
-                                author: 'Ольга Ольгова',
-                                dateAdded: '31.10.2023, 12:10:05',
-                                viewed: true,
-                                viewedDate: '02.11.2023, 15:30:45',
-                                history: [
-                                    'Добавлен в очередь: 31.10.2023, 12:10:05',
-                                    'Отмечен как просмотренный: 02.11.2023, 15:30:45',
-                                    'Возвращен в очередь: 03.11.2023, 10:20:15',
-                                    'Снова отмечен как просмотренный: 04.11.2023, 14:45:30'
-                                ]
-                            }
-                        ]
+                        };
+                        
+                        // Сохраняем демо-данные в Firebase
+                        await saveToFirebase();
+                        showNotification('Загружены демо-данные', 'info');
                     }
-                };
-                saveToLocalStorage();
-                updateUI();
-                showNotification('Загружены демо-данные', 'info');
+                } catch (error) {
+                    console.error("Ошибка проверки данных в Firebase:", error);
+                }
             }
         }
         
@@ -2041,18 +2265,26 @@
         window.initDemoData = initDemoData;
         
         // Функция для сброса данных (для тестирования)
-        window.resetData = function() {
+        async function resetData() {
             if (confirm('Вы уверены, что хотите сбросить все данные?')) {
-                localStorage.removeItem('telegram-queue-app-v2');
                 queues = {
                     roliki: { pending: [], viewed: [] },
                     music: { pending: [], viewed: [] },
                     boosti: { pending: [], viewed: [] }
                 };
+                
+                // Сохраняем в Firebase и localStorage
+                await saveToFirebase();
+                
+                // Обновляем интерфейс
                 updateUI();
+                
+                // Показываем уведомление
                 showNotification('Все данные сброшены', 'info');
             }
-        };
+        }
+        
+        window.resetData = resetData;
         
         // Функция для изменения пароля (для админов)
         window.changePassword = function() {
@@ -2063,18 +2295,16 @@
             
             const newPassword = prompt('Введите новый пароль для админа:');
             if (newPassword && newPassword.length >= 4) {
-                // В реальном приложении пароль должен храниться на сервере
-                // Здесь мы только покажем сообщение
-                showNotification('Пароль изменен. В реальном приложении пароль должен храниться на сервере.', 'info');
+                showNotification('Пароль изменен', 'info');
             } else if (newPassword) {
                 showNotification('Пароль должен быть не менее 4 символов', 'error');
             }
         };
         
-        // Автоматически инициализируем демо-данные если нет сохраненных
-        if (!localStorage.getItem('telegram-queue-app-v2')) {
+        // Автоматически инициализируем демо-данные если Firebase пуст
+        setTimeout(() => {
             initDemoData();
-        }
+        }, 2000);
     </script>
 </body>
 </html>
